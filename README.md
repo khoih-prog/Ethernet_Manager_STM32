@@ -30,7 +30,7 @@ New recent features:
 - You can update Credentials any time you need to change via Configure Portal. Data are saved in configurable locations in EEPROM.
 - **DoubleDetectDetector** feature to force Config Portal when double reset is detected within predetermined time, default 10s.
 - Configurable **Config Portal Title** to be either BoardName or default undistinguishable names.
-- Examples are redesigned to separate Credentials / Defines / Dynamic Params / Code so that you can change Credentials / Dynamic Params quickly for each device. Example [**MQTT_ThingStream_Ethernet_STM32**](MQTT_ThingStream_Ethernet_STM32) will demonstrate how to use the dynamic parameters, entered via Config Portal, to connect to [**ThingStream MQTT Server**](mqtt.thingstream.io).
+- Examples are redesigned to separate Credentials / Defines / Dynamic Params / Code so that you can change Credentials / Dynamic Params quickly for each device. Example [**MQTT_ThingStream_Ethernet_STM32**](examples/MQTT_ThingStream_Ethernet_STM32) will demonstrate how to use the dynamic parameters, entered via Config Portal, to connect to **ThingStream MQTT Server** at `mqtt.thingstream.io`.
 
 ---
 ---
@@ -135,9 +135,6 @@ To add UDP Multicast support, necessary for this [**UPnP_Generic library**](http
 - [Enc28J60Network.h](LibraryPatches/UIPEthernet/utility/Enc28J60Network.h)
 - [Enc28J60Network.cpp](LibraryPatches/UIPEthernet/utility/Enc28J60Network.cpp)
 
-7. To fix [`ESP32 compile error`](https://github.com/espressif/arduino-esp32), just copy the following file into the [`ESP32`](https://github.com/espressif/arduino-esp32) cores/esp32 directory (e.g. ./arduino-1.8.12/hardware/espressif/cores/esp32) to overwrite the old file:
-- [Server.h](LibraryPatches/esp32/cores/esp32/Server.h)
-
 ---
 ---
 
@@ -181,7 +178,7 @@ then select **one and only one** Ethernet library to use as follows:
 #define USE_CUSTOM_ETHERNET   false
 ```
 
-- To use any of the custom Ethernet library, such as Ethernet2, Ethernet3, EthernetLarge:
+- To use any of the Ethernet libraries, such as EThernet, Ethernet2, Ethernet3, EthernetLarge:
 
 ```
 // Only one if the following to be true
@@ -463,7 +460,7 @@ void loop()
 
 ### Example [MQTT_ThingStream_Ethernet_STM32](examples/MQTT_ThingStream_Ethernet_STM32)
 
-#### 1. File [MQTT_ThingStream_Ethernet_STM32](examples/MQTT_ThingStream_Ethernet_STM32/MQTT_ThingStream_Ethernet_STM32.ino)
+#### 1. File [MQTT_ThingStream_Ethernet_STM32.ino](examples/MQTT_ThingStream_Ethernet_STM32/MQTT_ThingStream_Ethernet_STM32.ino)
 
 ```
 #include "defines.h"
