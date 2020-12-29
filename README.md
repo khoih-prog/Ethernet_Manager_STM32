@@ -9,6 +9,90 @@
 ---
 ---
 
+## Table of Contents
+
+
+* [Why do we need this Ethernet_Manager_STM32 library](#why-do-we-need-this-ethernet_manager_stm32-library)
+  * [Features](#features)
+  * [Currently supported Boards](#currently-supported-boards)
+  * [Currently supported Ethernet shields/modules](#currently-supported-ethernet-shieldsmodules)
+* [Changelog](#changelog)
+  * [Releases v1.0.1](#releases-v101)
+  * [Releases v1.0.0](#releases-v100)
+* [Prerequisites](#prerequisites)
+* [Installation](#installation)
+  * [Use Arduino Library Manager](#use-arduino-library-manager)
+  * [Manual Install](#manual-install)
+  * [VS Code & PlatformIO](#vs-code--platformio)
+* [Packages' Patches](#packages-patches)
+  * [1. For STM32 boards](#1-for-stm32-boards) 
+* [Libraries' Patches](#libraries-patches)
+  * [1. For application requiring 2K+ HTML page](#1-for-application-requiring-2k-html-page)
+  * [2. For Ethernet library](#2-for-ethernet-library)
+  * [3. For EthernetLarge library](#3-for-ethernetlarge-library)
+  * [4. For Etherne2 library](#4-for-ethernet2-library)
+  * [5. For Ethernet3 library](#5-for-ethernet3-library)
+  * [6. For UIPEthernet library](#6-for-uipethernet-library)
+  * [7. For fixing ESP32 compile error](#7-for-fixing-esp32-compile-error) 
+* [Configuration Notes](#configuration-notes)
+  * [1. How to select which built-in Ethernet or shield to use](#1-how-to-select-which-built-in-ethernet-or-shield-to-use)
+  * [2. How to select another CS/SS pin to use](#2-how-to-select-another-csss-pin-to-use)
+  * [3. How to increase W5x00 TX/RX buffer](#3-how-to-increase-w5x00-txrx-buffer)
+  * [Not supported Libraries](#not-supported-libraries)
+* [How to use default Credentials and have them pre-loaded onto Config Portal](#how-to-use-default-credentials-and-have-them-pre-loaded-onto-config-portal)
+* [How to add dynamic parameters from sketch](#how-to-add-dynamic-parameters-from-sketch)
+* [Important Notes for using Dynamic Parameters' ids](#important-notes-for-using-dynamic-parameters-ids)
+* [Examples](#examples)
+  * [ 1. AM2315_Ethernet_STM32](examples/AM2315_Ethernet_STM32)
+  * [ 2. DHT11_Ethernet_STM32](examples/DHT11_Ethernet_STM32)
+  * [ 3. Ethernet_STM32](examples/Ethernet_STM32)
+  * [ 4. MQTT_ThingStream_Ethernet_STM32](examples/MQTT_ThingStream_Ethernet_STM32)
+* [So, how it works?](#so-how-it-works)
+* [Example MQTT_ThingStream_Ethernet_STM32](#example-mqtt_thingstream_ethernet_stm32)
+  * [1. File MQTT_ThingStream_Ethernet_STM32.ino](#1-file-mqtt_thingstream_ethernet_stm32ino)
+  * [2. File defines.h](#2-file-definesh) 
+  * [3. File Credentials.h](#3-file-credentialsh) 
+  * [4. File dynamicParams.h](#4-file-dynamicparamsh) 
+* [Debug Terminal Output Samples](#debug-terminal-output-samples)
+  * [1. Ethernet_STM32 on STM32F7 NUCLEO_F767ZI with LAN8742A Ethernet using STM32Ethernet Library](#1-ethernet_stm32-on-stm32f7-nucleo_f767zi-with-lan8742a-ethernet-using-stm32ethernet-library)
+    * [1.1 Normal run](#11-normal-run)
+    * [1.2. Restart after Config Portal](#12-restart-after-config-portal)
+  * [2. Ethernet_STM32 on STM32F7 NUCLEO_F767ZI with W5500 Ethernet using Ethernet Library](#2-ethernet_stm32-on-stm32f7-nucleo_f767zi-with-w5500-ethernet-using-ethernet-library)
+    * [2.1 Normal run with TO_LOAD_DEFAULT_CONFIG_DATA = true](#21-normal-run-with-to_load_default_config_data--true)
+    * [2.2. DRD detected](#22-drd-detected)
+    * [2.3. Restart after Config Portal](#23-restart-after-config-portal)
+  * [3. MQTT_ThingStream_Ethernet_STM32 on STM32F7 NUCLEO_F767ZI with ENC28J60 Ethernet using EthernetENC Library](#3-mqtt_thingstream_ethernet_stm32-on-stm32f7-nucleo_f767zi-with-enc28j60-ethernet-using-ethernetenc-library)
+    * [3.1 Normal run without correct ThingStream MQTT Credentials](#31-normal-run-without-correct-thingstream-mqtt-credentials)
+    * [3.2. Got correct ThingStream MQTT Credentials from Config Portal](#32-got-correct-thingstream-mqtt-credentials-from-config-portal)
+  * [4. Ethernet_STM32 on STM32F7 NUCLEO_F767ZI with W5x00 Ethernet using EthernetLarge Library](#4-ethernet_stm32-on-stm32f7-nucleo_f767zi-with-w5x00-ethernet-using-ethernetlarge-library)
+    * [4.1 Normal run](#41-normal-run)
+  * [5. MQTT_ThingStream_Ethernet_STM32 on STM32F7 NUCLEO_F767ZI with LAN8742A Ethernet using STM32Ethernet Library](#5-mqtt_thingstream_ethernet_stm32-on-stm32f7-nucleo_f767zi-with-lan8742a-ethernet-using-stm32ethernet-library)
+    * [5.1. Normal run without correct ThingStream MQTT Credentials](#51-normal-run-without-correct-thingstream-mqtt-credentials)
+    * [5.2. Got correct ThingStream MQTT Credentials from Config Portal](#52-got-correct-thingstream-mqtt-credentials-from-config-portal) 
+* [Debug](#debug)
+* [Troubleshooting](#troubleshooting)
+* [Releases](#releases)
+* [Issues](#issues)
+* [TO DO](#to-do)
+* [DONE](#done)
+* [Contributions and Thanks](#contributions-and-thanks)
+* [Contributing](#contributing)
+* [License](#license)
+* [Copyright](#copyright)
+
+---
+---
+
+### Why do we need this [Ethernet_Manager_STM32 library](https://github.com/khoih-prog/Ethernet_Manager_STM32)
+
+#### Features
+
+- This is the new library, adding to the current WiFiManager/Ethernet_Manager sets of libraries. It's designed to help you eliminate `hardcoding` your Credentials in **STM32F/L/H/G/WB/MP1 boards using Ethernet shields (W5100, W5200, W5500, ENC28J60, built-in LAN8742A Ethernet)**. It's currently **not supporting SSL**. Will support soon.
+- You can update Credentials any time you need to change via Configure Portal. Data are saved in configurable locations in EEPROM.
+- **DoubleDetectDetector** feature to force Config Portal when double reset is detected within predetermined time, default 10s.
+- Configurable **Config Portal Title** to be either BoardName or default undistinguishable names.
+- Examples are redesigned to separate Credentials / Defines / Dynamic Params / Code so that you can change Credentials / Dynamic Params quickly for each device. Example [**MQTT_ThingStream_Ethernet_STM32**](examples/MQTT_ThingStream_Ethernet_STM32) will demonstrate how to use the dynamic parameters, entered via Config Portal, to connect to **ThingStream MQTT Server** at `mqtt.thingstream.io`.
+
 New recent features:
 
 - **DoubleDetectDetector** feature to force Config Portal when double reset is detected within predetermined time, default 10s.
@@ -16,6 +100,50 @@ New recent features:
 - Examples are redesigned to separate Credentials / Defines / Dynamic Params / Code so that you can change Credentials / Dynamic Params quickly for each device
 
 ---
+
+#### Currently supported Boards
+
+1. **STM32 boards with built-in Ethernet LAN8742A** such as :
+
+  - **Nucleo-144 (F429ZI, F767ZI)**
+  - **Discovery (STM32F746G-DISCOVERY)**
+  - **All STM32 boards (STM32F/L/H/G/WB/MP1) with 32K+ Flash, with Built-in Ethernet**
+  - See [EthernetWebServer_STM32 Support and Test Results](https://github.com/khoih-prog/EthernetWebServer_STM32/issues/1)
+  
+2. **STM32F/L/H/G/WB/MP1 boards (with 32+K Flash) running W5x00 or ENC28J60 shields)**
+
+- Nucleo-144
+- Nucleo-64
+- Discovery
+- Generic STM32F0, STM32F1, STM32F2, STM32F3, STM32F4, STM32F7 (with 64+K Flash): x8 and up
+- STM32L0, STM32L1, STM32L4
+- STM32G0, STM32G4
+- STM32H7
+- STM32WB
+- STM32MP1
+- LoRa boards
+- 3-D printer boards
+- Generic Flight Controllers
+- Midatronics boards
+ 
+ ---
+ 
+#### Currently Supported Ethernet shields/modules:
+
+1. Built-in Ethernet LAN8742A using [`STM32Ethernet library`](https://github.com/stm32duino/STM32Ethernet)
+2. W5x00 using [`Ethernet`](https://www.arduino.cc/en/Reference/Ethernet), [`EthernetLarge`](https://github.com/OPEnSLab-OSU/EthernetLarge), [`Ethernet2`](https://github.com/adafruit/Ethernet2) or [`Ethernet3`](https://github.com/sstaub/Ethernet3) library
+3. ENC28J60 using [`EthernetENC`](https://github.com/jandrassy/EthernetENC) or [`UIPEthernet`](https://github.com/UIPEthernet/UIPEthernet) library
+
+
+---
+---
+
+## Changelog
+
+### Releases v1.0.1
+
+1. Clean-up all compiler warnings possible.
+2. Add Table of Contents
 
 ### Releases v1.0.0
 
@@ -25,14 +153,6 @@ New recent features:
 
 
 ---
-
-- This is the new library, adding to the current WiFiManager/Ethernet_Manager sets of libraries. It's designed to help you eliminate `hardcoding` your Credentials in **STM32F/L/H/G/WB/MP1 boards using Ethernet shields (W5100, W5200, W5500, ENC28J60, built-in LAN8742A Ethernet)**. It's currently **not supporting SSL**. Will support soon.
-- You can update Credentials any time you need to change via Configure Portal. Data are saved in configurable locations in EEPROM.
-- **DoubleDetectDetector** feature to force Config Portal when double reset is detected within predetermined time, default 10s.
-- Configurable **Config Portal Title** to be either BoardName or default undistinguishable names.
-- Examples are redesigned to separate Credentials / Defines / Dynamic Params / Code so that you can change Credentials / Dynamic Params quickly for each device. Example [**MQTT_ThingStream_Ethernet_STM32**](examples/MQTT_ThingStream_Ethernet_STM32) will demonstrate how to use the dynamic parameters, entered via Config Portal, to connect to **ThingStream MQTT Server** at `mqtt.thingstream.io`.
-
----
 ---
 
 ## Prerequisites
@@ -40,7 +160,7 @@ New recent features:
  1. [`Arduino IDE 1.8.13+` for Arduino](https://www.arduino.cc/en/Main/Software)
  2. [`Arduino Core for STM32 1.9.0+`](https://github.com/stm32duino/Arduino_Core_STM32) for STM32 (Use Arduino Board Manager)
  3. [`Functional-VLPP library v1.0.1+`](https://github.com/khoih-prog/functional-vlpp) to use server's lambda function. To install. check [![arduino-library-badge](https://www.ardu-badge.com/badge/Functional-Vlpp.svg?)](https://www.ardu-badge.com/Functional-Vlpp)
- 4. [`DoubleResetDetector_Generic library v1.0.2+`](https://github.com/khoih-prog/DoubleResetDetector_Generic). To install. check [![arduino-library-badge](https://www.ardu-badge.com/badge/DoubleResetDetector_Generic.svg?)](https://www.ardu-badge.com/DoubleResetDetector_Generic).
+ 4. [`DoubleResetDetector_Generic library v1.0.3+`](https://github.com/khoih-prog/DoubleResetDetector_Generic). To install. check [![arduino-library-badge](https://www.ardu-badge.com/badge/DoubleResetDetector_Generic.svg?)](https://www.ardu-badge.com/DoubleResetDetector_Generic).
  5. Depending on which Ethernet card you're using:
    - [`STM32Ethernet library v1.2.0+`](https://github.com/stm32duino/STM32Ethernet) for built-in LAN8742A Ethernet on (Nucleo-144, Discovery)
    - [`Ethernet library v2.0.0+`](https://www.arduino.cc/en/Reference/Ethernet) for W5100, W5200 and W5500.
@@ -59,6 +179,7 @@ New recent features:
 The suggested way to install is to:
 
 #### Use Arduino Library Manager
+
 The best way is to use `Arduino Library Manager`. Search for `Ethernet_Manager_STM32`, then select / install the latest version. You can also use this link [![arduino-library-badge](https://www.ardu-badge.com/badge/Ethernet_Manager_STM32.svg?)](https://www.ardu-badge.com/Ethernet_Manager_STM32) for more detailed instructions.
 
 ### Manual Install
@@ -81,7 +202,9 @@ The best way is to use `Arduino Library Manager`. Search for `Ethernet_Manager_S
 
 ### Packages' Patches
 
- 1. **To use Serial1 on some STM32 boards without Serial1 definition (Nucleo-144 NUCLEO_F767ZI, Nucleo-64 NUCLEO_L053R8, etc.) boards**, you have to copy the files [STM32 variant.h](Packages_Patches/STM32/hardware/stm32/1.9.0) into STM32 stm32 directory (~/.arduino15/packages/STM32/hardware/stm32/1.9.0). You have to modify the files corresponding to your boards, this is just an illustration how to do.
+#### 1. For STM32 boards
+
+**To use Serial1 on some STM32 boards without Serial1 definition (Nucleo-144 NUCLEO_F767ZI, Nucleo-64 NUCLEO_L053R8, etc.) boards**, you have to copy the files [STM32 variant.h](Packages_Patches/STM32/hardware/stm32/1.9.0) into STM32 stm32 directory (~/.arduino15/packages/STM32/hardware/stm32/1.9.0). You have to modify the files corresponding to your boards, this is just an illustration how to do.
 
 Supposing the STM32 stm32 core version is 1.9.0. These files must be copied into the directory:
 
@@ -94,46 +217,61 @@ theses files must be copied into the corresponding directory:
 - `~/.arduino15/packages/STM32/hardware/stm32/x.yy.zz/variants/NUCLEO_F767ZI/variant.h`
 - `~/.arduino15/packages/STM32/hardware/stm32/x.yy.zz/variants/NUCLEO_L053R8/variant.h`
 
+
 ---
 
 ### Libraries' Patches
 
-1. If your application requires 2K+ HTML page, the current [`Ethernet library`](https://www.arduino.cc/en/Reference/Ethernet) must be modified if you are using W5200/W5500 Ethernet shields. W5100 is not supported for 2K+ buffer. If you use boards requiring different CS/SS pin for W5x00 Ethernet shield, for example ESP32, ESP8266, nRF52, etc., you also have to modify the following libraries to be able to specify the CS/SS pin correctly.
+#### 1. For application requiring 2K+ HTML page
 
-2. To fix [`Ethernet library`](https://www.arduino.cc/en/Reference/Ethernet), just copy these following files into the [`Ethernet library`](https://www.arduino.cc/en/Reference/Ethernet) directory to overwrite the old files:
+If your application requires 2K+ HTML page, the current [`Ethernet library`](https://www.arduino.cc/en/Reference/Ethernet) must be modified if you are using W5200/W5500 Ethernet shields. W5100 is not supported for 2K+ buffer. If you use boards requiring different CS/SS pin for W5x00 Ethernet shield, for example ESP32, ESP8266, nRF52, etc., you also have to modify the following libraries to be able to specify the CS/SS pin correctly.
+
+#### 2. For Ethernet library
+
+To fix [`Ethernet library`](https://www.arduino.cc/en/Reference/Ethernet), just copy these following files into the [`Ethernet library`](https://www.arduino.cc/en/Reference/Ethernet) directory to overwrite the old files:
 - [Ethernet.h](LibraryPatches/Ethernet/src/Ethernet.h)
 - [Ethernet.cpp](LibraryPatches/Ethernet/src/Ethernet.cpp)
 - [EthernetServer.cpp](LibraryPatches/Ethernet/src/EthernetServer.cpp)
 - [w5100.h](LibraryPatches/Ethernet/src/utility/w5100.h)
 - [w5100.cpp](LibraryPatches/Ethernet/src/utility/w5100.cpp)
 
-3. To fix [`EthernetLarge library`](https://github.com/OPEnSLab-OSU/EthernetLarge), just copy these following files into the [`EthernetLarge library`](https://github.com/OPEnSLab-OSU/EthernetLarge) directory to overwrite the old files:
+#### 3. For EthernetLarge library
+
+To fix [`EthernetLarge library`](https://github.com/OPEnSLab-OSU/EthernetLarge), just copy these following files into the [`EthernetLarge library`](https://github.com/OPEnSLab-OSU/EthernetLarge) directory to overwrite the old files:
 - [EthernetLarge.h](LibraryPatches/EthernetLarge/src/EthernetLarge.h)
 - [EthernetLarge.cpp](LibraryPatches/EthernetLarge/src/EthernetLarge.cpp)
 - [EthernetServer.cpp](LibraryPatches/EthernetLarge/src/EthernetServer.cpp)
 - [w5100.h](LibraryPatches/EthernetLarge/src/utility/w5100.h)
 - [w5100.cpp](LibraryPatches/EthernetLarge/src/utility/w5100.cpp)
 
-4. To fix [`Ethernet2 library`](https://github.com/khoih-prog/Ethernet2), just copy these following files into the [`Ethernet2 library`](https://github.com/khoih-prog/Ethernet2) directory to overwrite the old files:
+
+#### 4. For Ethernet2 library
+
+To fix [`Ethernet2 library`](https://github.com/khoih-prog/Ethernet2), just copy these following files into the [`Ethernet2 library`](https://github.com/khoih-prog/Ethernet2) directory to overwrite the old files:
 
 - [Ethernet2.h](LibraryPatches/Ethernet2/src/Ethernet2.h)
 - [Ethernet2.cpp](LibraryPatches/Ethernet2/src/Ethernet2.cpp)
 
-To add UDP Multicast support, necessary for this [**UPnP_Generic library**](https://github.com/khoih-prog/UPnP_Generic):
+To add UDP Multicast support, necessary for the [**UPnP_Generic library**](https://github.com/khoih-prog/UPnP_Generic):
 
 - [EthernetUdp2.h](LibraryPatches/Ethernet2/src/EthernetUdp2.h)
 - [EthernetUdp2.cpp](LibraryPatches/Ethernet2/src/EthernetUdp2.cpp)
+
+#### 5. For Ethernet3 library
 
 5. To fix [`Ethernet3 library`](https://github.com/sstaub/Ethernet3), just copy these following files into the [`Ethernet3 library`](https://github.com/sstaub/Ethernet3) directory to overwrite the old files:
 - [Ethernet3.h](LibraryPatches/Ethernet3/src/Ethernet3.h)
 - [Ethernet3.cpp](LibraryPatches/Ethernet3/src/Ethernet3.cpp)
 
-6. ***To be able to compile and run on nRF52 boards with ENC28J60 using UIPEthernet library***, you have to copy these following files into the UIPEthernet `utility` directory to overwrite the old files:
+#### 6. For UIPEthernet library
+
+***To be able to compile and run on nRF52 boards with ENC28J60 using UIPEthernet library***, you have to copy these following files into the UIPEthernet `utility` directory to overwrite the old files:
 
 - [UIPEthernet.h](LibraryPatches/UIPEthernet/UIPEthernet.h)
 - [UIPEthernet.cpp](LibraryPatches/UIPEthernet/UIPEthernet.cpp)
 - [Enc28J60Network.h](LibraryPatches/UIPEthernet/utility/Enc28J60Network.h)
 - [Enc28J60Network.cpp](LibraryPatches/UIPEthernet/utility/Enc28J60Network.cpp)
+
 
 ---
 ---
@@ -210,14 +348,6 @@ For example, Ethernet_XYZ library uses **Ethernet_XYZ.h**
 #include <Ethernet_XYZ.h.h>
 ```
 
----
-
-#### Important:
-
-- The **Ethernet_Shield_W5200, EtherCard, EtherSia  libraries are not supported**. Don't use unless you know how to modify those libraries.
-- Requests to support for any future custom Ethernet library will be ignored. **Use at your own risk**.
-
-
 #### 2. How to select another CS/SS pin to use
 
 The default CS/SS pin is 10 for all boards.
@@ -248,6 +378,11 @@ then select the CS/SS pin (e.g. 22) to use as follows:
   Ethernet.setCsPin (USE_THIS_SS_PIN);
   Ethernet.init (ETHERNET3_MAX_SOCK_NUM);
 ```
+
+#### Not supported Libraries
+
+- The **Ethernet_Shield_W5200, EtherCard, EtherSia  libraries are not supported**. Don't use unless you know how to modify those libraries.
+- Requests to support for any future custom Ethernet library will be ignored. **Use at your own risk**.
 
 ---
 
@@ -498,13 +633,15 @@ IPAddress localEthernetIP;
 
 ///////////// Start MQTT ThingStream ///////////////
 
+String data         = "Hello from MQTT_ThingStream on " + String(BOARD_NAME) + " with " + String(SHIELD_TYPE);
+const char *pubData = data.c_str();
+
 void mqtt_receive_callback(char* topic, byte* payload, unsigned int length);
 
 unsigned long lastMsg = 0;
 
 // Initialize the SSL client library
 // Arguments: EthernetClient, our trust anchors
-
 
 EthernetClient    ethClient;
 
@@ -516,11 +653,11 @@ PubSubClient* client = NULL;
 */
 void mqtt_receive_callback(char* topic, byte* payload, unsigned int length) 
 {
-  Serial.print("\nMQTT Message receive [");
+  Serial.print(F("\nMQTT Message receive ["));
   Serial.print(topic);
-  Serial.print("] ");
+  Serial.print(F("] "));
   
-  for (int i = 0; i < length; i++) 
+  for (unsigned int i = 0; i < length; i++) 
   {
     Serial.print((char)payload[i]);
   }
@@ -529,11 +666,11 @@ void mqtt_receive_callback(char* topic, byte* payload, unsigned int length)
 }
 
 void reconnect() 
-{
+{     
   // Loop until we're reconnected
   while (!client->connected()) 
   {
-    Serial.print("Attempting MQTT connection to ");
+    Serial.print(F("Attempting MQTT connection to "));
     Serial.println(MQTT_SERVER);
 
     // Attempt to connect
@@ -542,16 +679,13 @@ void reconnect()
 
     if (connect_status)                                
     {
-      Serial.println("...connected");
-      
-      // Once connected, publish an announcement...
-      String data = "Hello from MQTTClient_SSL on " + String(BOARD_NAME);
+      Serial.println(F("...connected"));
 
-      client->publish(topic.c_str(), data.c_str());
+      client->publish(topic.c_str(), pubData);
 
-      Serial.println("Published connection message successfully!");
+      Serial.println(F("Published connection message successfully!"));
      
-      Serial.print("Subcribed to: ");
+      Serial.print(F("Subcribed to: "));
       Serial.println(subTopic);
       
       // ... and resubscribe
@@ -561,9 +695,9 @@ void reconnect()
     } 
     else 
     {
-      Serial.print("failed, rc=");
+      Serial.print(F("failed, rc="));
       Serial.print(client->state());
-      Serial.println(" try again in 5 seconds");
+      Serial.println(F(" try again in 5 seconds"));
       
       // Wait 5 seconds before retrying
       delay(5000);
@@ -587,7 +721,7 @@ void heartBeatPrint()
 #if (USE_ETHERNET2 || USE_ETHERNET3)
   // To modify Ethernet2 library
   linkStatus = Ethernet.link();
-  ET_LOGINFO3("localEthernetIP = ", localEthernetIP, ", linkStatus = ", (linkStatus == 1) ? "LinkON" : "LinkOFF" );
+  ET_LOGINFO3(F("localEthernetIP = "), localEthernetIP, F(", linkStatus = "), (linkStatus == 1) ? F("LinkON") : F("LinkOFF") );
   
   if ( ( linkStatus == 1 ) && ((uint32_t) localEthernetIP != 0) )
 #else
@@ -595,7 +729,7 @@ void heartBeatPrint()
   // The linkStatus() is not working with W5100. Just using IP != 0.0.0.0
   // Better to use ping for W5100
   linkStatus = (int) Ethernet.linkStatus();
-  ET_LOGINFO3("localEthernetIP = ", localEthernetIP, ", linkStatus = ", (linkStatus == LinkON) ? "LinkON" : "LinkOFF" );
+  ET_LOGINFO3(F("localEthernetIP = "), localEthernetIP, F(", linkStatus = "), (linkStatus == LinkON) ? F("LinkON") : F("LinkOFF") );
   
   if ( ( (linkStatus == LinkON) || !isW5500 ) && ((uint32_t) localEthernetIP != 0) )
 #endif
@@ -636,9 +770,12 @@ void setup()
   Serial.begin(115200);
   while (!Serial);
 
-  Serial.println("\nStart MQTT_ThingStream_Ethernet_STM32 on " + String(BOARD_NAME)); 
-  Serial.println("Ethernet Shield type : " + String(SHIELD_TYPE));
+  Serial.print(F("\nStart MQTT_ThingStream_Ethernet_STM32 on "));
+  Serial.println(BOARD_NAME);
+  Serial.print(F("Ethernet Shield type : "));
+  Serial.println(SHIELD_TYPE);
   Serial.println(ETHERNET_MANAGER_STM32_VERSION);
+  Serial.println(DOUBLERESETDETECTOR_GENERIC_VERSION);
 
   #if ( defined(USE_BUILTIN_ETHERNET) && USE_BUILTIN_ETHERNET )
     ET_LOGWARN(F("======== USE_BUILTIN_ETHERNET ========"));
@@ -751,22 +888,24 @@ void setup()
 #if ( USE_ETHERNET || USE_ETHERNET_LARGE)
   isW5500 = (Ethernet.hardwareStatus() == EthernetW5500);
   Serial.print(F("Ethernet type is "));
-  Serial.println(isW5500 ? "W5500" : "W5100");
+  Serial.println(isW5500 ? F("W5500") : F("W5100"));
 #endif
   
-  Serial.println("***************************************");
+  Serial.println(F("***************************************"));
   Serial.println(topic);
-  Serial.println("***************************************");
+  Serial.println(F("***************************************"));
 }
 
 #if (USE_DYNAMIC_PARAMETERS)
 void displayCredentials()
 {
-  Serial.println("\nYour stored Credentials :");
+  Serial.println(F("\nYour stored Credentials :"));
 
   for (int i = 0; i < NUM_MENU_ITEMS; i++)
   {
-    Serial.println(String(myMenuItems[i].displayName) + " = " + myMenuItems[i].pdata);
+    Serial.print(myMenuItems[i].displayName);
+    Serial.print(F(" = "));
+    Serial.println(myMenuItems[i].pdata);
   }
 }
 
@@ -794,9 +933,6 @@ void displayCredentialsOnce()
 #endif
 
 #define MQTT_PUBLISH_INTERVAL_MS      20000L
-
-String data         = "Hello from MQTT_ThingStream on " + String(BOARD_NAME) + " with " + String(SHIELD_TYPE);
-const char *pubData = data.c_str();
 
 void loop()
 {
@@ -832,10 +968,12 @@ void loop()
   
       if (!client->publish(topic.c_str(), pubData))
       {
-        Serial.println("Message failed to send.");
+        Serial.println(F("Message failed to send."));
       }
   
-      Serial.print("\nMQTT Message Send : " + topic + " => ");
+      Serial.print(F("\nMQTT Message Send : "));
+      Serial.print(topic);
+      Serial.print(F(" => "));
       Serial.println(data);
     }
     
@@ -868,6 +1006,9 @@ void loop()
   #error This code is designed to run on STM32F/L/H/G/WB/MP1 platform! Please check your Tools->Board setting.  
 #endif
 
+// To suppress boolean warnings of old libraries
+#define boolean   bool
+
 /* Comment this out to disable prints and save space */
 #define ETHERNET_MANAGER_STM32_DEBUG_PORT       Serial
 
@@ -894,54 +1035,54 @@ void loop()
 #define USE_CUSTOM_ETHERNET   false
 
 #if defined(STM32F0)
-  #warning STM32F0 board selected
-  #define BOARD_TYPE  "STM32F0"
+#warning STM32F0 board selected
+#define BOARD_TYPE  "STM32F0"
 #elif defined(STM32F1)
-  #warning STM32F1 board selected
-  #define BOARD_TYPE  "STM32F1"
+#warning STM32F1 board selected
+#define BOARD_TYPE  "STM32F1"
 #elif defined(STM32F2)
-  #warning STM32F2 board selected
-  #define BOARD_TYPE  "STM32F2"
+#warning STM32F2 board selected
+#define BOARD_TYPE  "STM32F2"
 #elif defined(STM32F3)
-  #warning STM32F3 board selected
-  #define BOARD_TYPE  "STM32F3"
+#warning STM32F3 board selected
+#define BOARD_TYPE  "STM32F3"
 #elif defined(STM32F4)
-  #warning STM32F4 board selected
-  #define BOARD_TYPE  "STM32F4"
+#warning STM32F4 board selected
+#define BOARD_TYPE  "STM32F4"
 #elif defined(STM32F7)
-  #warning STM32F7 board selected
-  #define BOARD_TYPE  "STM32F7"
+#warning STM32F7 board selected
+#define BOARD_TYPE  "STM32F7"
 #elif defined(STM32L0)
-  #warning STM32L0 board selected
-  #define BOARD_TYPE  "STM32L0"
+#warning STM32L0 board selected
+#define BOARD_TYPE  "STM32L0"
 #elif defined(STM32L1)
-  #warning STM32L1 board selected
-  #define BOARD_TYPE  "STM32L1"
+#warning STM32L1 board selected
+#define BOARD_TYPE  "STM32L1"
 #elif defined(STM32L4)
-  #warning STM32L4 board selected
-  #define BOARD_TYPE  "STM32L4"
+#warning STM32L4 board selected
+#define BOARD_TYPE  "STM32L4"
 #elif defined(STM32H7)
-  #warning STM32H7 board selected
-  #define BOARD_TYPE  "STM32H7"
+#warning STM32H7 board selected
+#define BOARD_TYPE  "STM32H7"
 #elif defined(STM32G0)
-  #warning STM32G0 board selected
-  #define BOARD_TYPE  "STM32G0"
+#warning STM32G0 board selected
+#define BOARD_TYPE  "STM32G0"
 #elif defined(STM32G4)
-  #warning STM32G4 board selected
-  #define BOARD_TYPE  "STM32G4"
+#warning STM32G4 board selected
+#define BOARD_TYPE  "STM32G4"
 #elif defined(STM32WB)
-  #warning STM32WB board selected
-  #define BOARD_TYPE  "STM32WB"
+#warning STM32WB board selected
+#define BOARD_TYPE  "STM32WB"
 #elif defined(STM32MP1)
-  #warning STM32MP1 board selected
-  #define BOARD_TYPE  "STM32MP1"
+#warning STM32MP1 board selected
+#define BOARD_TYPE  "STM32MP1"
 #else
-  #warning STM32 unknown board selected
-  #define BOARD_TYPE  "STM32 Unknown"
+#warning STM32 unknown board selected
+#define BOARD_TYPE  "STM32 Unknown"
 #endif
 
 #ifndef BOARD_NAME
-  #define BOARD_NAME    BOARD_TYPE
+#define BOARD_NAME    BOARD_TYPE
 #endif
 
 //////////////////////////////////////////
@@ -950,19 +1091,10 @@ void loop()
 
 //////////////////////////////////////////
 
-//#define USE_SSL   true
-#define USE_SSL   false
-
-#if USE_SSL
-  // Need ArduinoECCX08 and ArduinoBearSSL libraries
-  // Currently, error not enough memory for UNO, Mega2560. Don't use
-  #include <EthernetSSL_Manager_STM32.h>
-#else
-  #include <Ethernet_Manager_STM32.h>
-#endif
+#include <Ethernet_Manager_STM32.h>
 
 #ifndef SHIELD_TYPE
-  #define SHIELD_TYPE     "Unknown Ethernet shield/library" 
+#define SHIELD_TYPE     "Unknown Ethernet shield/library"
 #endif
 
 #define W5100_CS        10
@@ -1102,16 +1234,19 @@ Ethernet_Configuration defaultConfig;
 ---
 ---
 
-### Debug Termimal Output Samples
+### Debug Terminal Output Samples
 
-1. This is the terminal output of an NUCLEO_F767ZI board with LAN8742A Ethernet & STM32Ethernet Library, running [Ethernet_STM32](examples/Ethernet_STM32) example.
+#### 1. Ethernet_STM32 on STM32F7 NUCLEO_F767ZI with LAN8742A Ethernet using STM32Ethernet Library
 
-#### 1. Normal run
+This is the terminal output of an STM32F7 Nucleo-144 NUCLEO_F767ZI board with LAN8742A Ethernet & STM32Ethernet Library, running [Ethernet_STM32](examples/Ethernet_STM32) example.
+
+#### 1.1. Normal run
 
 ```
 Start Ethernet_STM32 on NUCLEO_F767ZI
 Ethernet Shield type : LAN8742A Ethernet & STM32Ethernet Library
-Ethernet_Manager_STM32 v1.0.0
+Ethernet_Manager_STM32 v1.0.1
+DoubleResetDetector_Generic v1.0.3
 [ETM] ======= Start Default Config Data =======
 [ETM] Header=  , BoardName= 
 [ETM] StaticIP= 
@@ -1138,12 +1273,13 @@ H
 ```
 
 
-#### 2. Restart after Config Portal
+#### 1.2. Restart after Config Portal
 
 ```cpp
 Start Ethernet_STM32 on NUCLEO_F767ZI
 Ethernet Shield type : LAN8742A Ethernet & STM32Ethernet Library
-Ethernet_Manager_STM32 v1.0.0
+Ethernet_Manager_STM32 v1.0.1
+DoubleResetDetector_Generic v1.0.3
 [ETM] ======= Start Default Config Data =======
 [ETM] Header=  , BoardName= 
 [ETM] StaticIP= 
@@ -1170,14 +1306,17 @@ HHHHHHHHHH HHHHHHHHHH HHHHHH
 
 ---
 
-2. This is the terminal output of STM32F7 Nucleo-144 NUCLEO_F767ZI board with W5500 Ethernet shield using Ethernet Library, running [Ethernet_STM32](examples/Ethernet_STM32) example demonstrating **doubleResetDetect feature**.
+#### 2. Ethernet_STM32 on STM32F7 NUCLEO_F767ZI with W5500 Ethernet using Ethernet Library
 
-#### 1.Normal run with TO_LOAD_DEFAULT_CONFIG_DATA = true
+This is the terminal output of STM32F7 Nucleo-144 NUCLEO_F767ZI board with W5500 Ethernet shield using Ethernet Library, running [Ethernet_STM32](examples/Ethernet_STM32) example demonstrating **doubleResetDetect feature**.
+
+#### 2.1. Normal run with TO_LOAD_DEFAULT_CONFIG_DATA = true
 
 ```
 Start Ethernet_STM32 on NUCLEO_F767ZI
 Ethernet Shield type : W5x00 using Ethernet Library
-Ethernet_Manager_STM32 v1.0.0
+Ethernet_Manager_STM32 v1.0.1
+DoubleResetDetector_Generic v1.0.3
 
 EEPROM size = 16384, start = 0
 Flag read = 0xd0d04321
@@ -1195,13 +1334,14 @@ SetFlag write = 0xd0d01234
 [ETM] MAC:FE-98-FE-DE-D9-BA
 ```
 
-#### 2. DRD detected
+#### 2.2. DRD detected
 
 
 ```
 Start Ethernet_STM32 on NUCLEO_F767ZI
 Ethernet Shield type : W5x00 using Ethernet Library
-Ethernet_Manager_STM32 v1.0.0
+Ethernet_Manager_STM32 v1.0.1
+DoubleResetDetector_Generic v1.0.3
 
 EEPROM size = 16384, start = 0
 Flag read = 0xd0d01234
@@ -1240,12 +1380,13 @@ H[ETM] h:Updating EEPROM. Please wait for reset
 H
 ```
 
-#### 3. Restart after Config Portal
+#### 2.3. Restart after Config Portal
 
 ```
 Start Ethernet_STM32 on NUCLEO_F767ZI
 Ethernet Shield type : W5x00 using Ethernet Library
-Ethernet_Manager_STM32 v1.0.0
+Ethernet_Manager_STM32 v1.0.1
+DoubleResetDetector_Generic v1.0.3
 
 EEPROM size = 16384, start = 0
 Flag read = 0xd0d04321
@@ -1283,14 +1424,17 @@ HH
 
 ---
 
-3. This is the terminal output of NUCLEO_F767ZI board with ENC28J60 using EthernetENC Library, running complex [MQTT_ThingStream_Ethernet_STM32](examples/MQTT_ThingStream_Ethernet_STM32) example to demonstrate how to use dynamic parameters, entered via Config Portal, to connect to [**ThingStream MQTT Server**](mqtt.thingstream.io).
+#### 3. MQTT_ThingStream_Ethernet_STM32 on STM32F7 NUCLEO_F767ZI with ENC28J60 Ethernet using EthernetENC Library
 
-#### 1.Normal run without correct ThingStream MQTT Credentials
+This is the terminal output of STM32F7 Nucleo-144 NUCLEO_F767ZI board with ENC28J60 using EthernetENC Library, running complex [MQTT_ThingStream_Ethernet_STM32](examples/MQTT_ThingStream_Ethernet_STM32) example to demonstrate how to use dynamic parameters, entered via Config Portal, to connect to [**ThingStream MQTT Server**](mqtt.thingstream.io).
+
+#### 3.1. Normal run without correct ThingStream MQTT Credentials
 
 ```
 Start MQTT_ThingStream_Ethernet_STM32 on NUCLEO_F767ZI
 Ethernet Shield type : ENC28J60 using EthernetENC Library
-Ethernet_Manager_STM32 v1.0.0
+Ethernet_Manager_STM32 v1.0.1
+DoubleResetDetector_Generic v1.0.3
 
 EEPROM size = 16384, start = 0
 Flag read = 0xd0d04321
@@ -1318,12 +1462,13 @@ ClearFlag write = 0xd0d04321
 [ETM] h:Rst
 ```
 
-#### 2. Got correct ThingStream MQTT Credentials from Config Portal
+#### 3.2. Got correct ThingStream MQTT Credentials from Config Portal
 
 ```
 Start MQTT_ThingStream_Ethernet_STM32 on NUCLEO_F767ZI
 Ethernet Shield type : ENC28J60 using EthernetENC Library
-Ethernet_Manager_STM32 v1.0.0
+Ethernet_Manager_STM32 v1.0.1
+DoubleResetDetector_Generic v1.0.3
 
 EEPROM size = 16384, start = 0
 Flag read = 0xd0d04321
@@ -1366,14 +1511,17 @@ HHHH
 
 ---
 
-4. This is the terminal output of NUCLEO_F767ZI board with W5x00 using EthernetLarge Library, running [Ethernet_STM32](examples/Ethernet_STM32) example to demonstrate the link status operation.
+#### 4. Ethernet_STM32 on STM32F7 NUCLEO_F767ZI with W5x00 Ethernet using EthernetLarge Library
 
-#### 1.Normal run 
+This is the terminal output of STM32F7 Nucleo-144 NUCLEO_F767ZI board with W5x00 using EthernetLarge Library, running [Ethernet_STM32](examples/Ethernet_STM32) example to demonstrate the link status operation.
+
+#### 4.1. Normal run 
 
 ```
 Start Ethernet_STM32 on NUCLEO_F767ZI
 Ethernet Shield type : W5x00 using EthernetLarge Library
-Ethernet_Manager_STM32 v1.0.0
+Ethernet_Manager_STM32 v1.0.1
+DoubleResetDetector_Generic v1.0.3
 
 EEPROM size = 16384, start = 0
 Flag read = 0xd0d04321
@@ -1410,7 +1558,138 @@ HHFFHHH    **<==== Check connection report by removing Ethernet Cable**
 ```
 
 ---
+
+#### 5. MQTT_ThingStream_Ethernet_STM32 on STM32F7 NUCLEO_F767ZI with LAN8742A Ethernet using STM32Ethernet Library
+
+This is the terminal output of STM32F7 Nucleo-144 NUCLEO_F767ZI board with LAN8742A using STM32Ethernet Library, running complex [MQTT_ThingStream_Ethernet_STM32](examples/MQTT_ThingStream_Ethernet_STM32) example to demonstrate how to use dynamic parameters, entered via Config Portal, to connect to [**ThingStream MQTT Server**](mqtt.thingstream.io).
+
+#### 5.1. Normal run without correct ThingStream MQTT Credentials
+
+```
+Start MQTT_ThingStream_Ethernet_STM32 on NUCLEO_F767ZI
+Ethernet Shield type : LAN8742A Ethernet & STM32Ethernet Library
+Ethernet_Manager_STM32 v1.0.1
+DoubleResetDetector_Generic v1.0.3
+
+EEPROM size = 16384, start = 0
+Flag read = 0xd0d04321
+No doubleResetDetected
+SetFlag write = 0xd0d01234
+[ETM] ======= Start Default Config Data =======
+[ETM] Header= Eth_NonSSL , BoardName= STM32-Ethernet
+[ETM] StaticIP= 
+[ETM] Header= STM32 , BoardName= STM32-Ethernet
+[ETM] StaticIP= 192.168.2.188
+[ETM] CCSum=0x 8b6 ,RCSum=0x 8b6
+[ETM] Invalid Stored Dynamic Data. Ignored
+[ETM] Start connectEthernet using DHCP
+[ETM] MAC:FE-9A-F4-DC-DE-88
+[ETM] Dynamic IP OK, connected
+[ETM] IP: 192.168.2.69
+[ETM] begin:Stay in CfgPortal: No CfgDat
+Connected! IP address: 192.168.2.69
+***************************************
+esp32-sniffer/12345678/ble
+***************************************
+Stop doubleResetDetecting
+ClearFlag write = 0xd0d04321
+[ETM] h:Updating EEPROM. Please wait for reset
+[ETM] h:Rst
+```
+
+#### 5.2. Got correct ThingStream MQTT Credentials from Config Portal
+
+```
+Start MQTT_ThingStream_Ethernet_STM32 on NUCLEO_F767ZI
+Ethernet Shield type : LAN8742A Ethernet & STM32Ethernet Library
+Ethernet_Manager_STM32 v1.0.1
+DoubleResetDetector_Generic v1.0.3
+
+EEPROM size = 16384, start = 0
+Flag read = 0xd0d04321
+No doubleResetDetected
+SetFlag write = 0xd0d01234
+[ETM] ======= Start Default Config Data =======
+[ETM] Header= Eth_NonSSL , BoardName= STM32-Ethernet
+[ETM] StaticIP= 
+[ETM] Header= STM32 , BoardName= STM32-Ethernet
+[ETM] StaticIP= 192.168.2.188
+[ETM] CCSum=0x 8b6 ,RCSum=0x 8b6
+[ETM] Header= STM32 , BoardName= STM32-Ethernet
+[ETM] StaticIP= 192.168.2.188
+[ETM] Start connectEthernet using Static IP = 192.168.2.188
+[ETM] MAC:FE-99-FF-DF-DB-BA
+[ETM] IP: 192.168.2.188
+[ETM] begin:Ethernet Connected.
+Connected! IP address: 192.168.2.188
+***************************************
+esp32-sniffer/12345678/ble
+***************************************
+Stop doubleResetDetecting
+ClearFlag write = 0xd0d04321
+Attempting MQTT connection to mqtt.thingstream.io
+...connected
+Published connection message successfully!
+Subcribed to: esp32-sniffer/12345678/ble
+H
+Your stored Credentials :
+MQTT Server = mqtt.thingstream.io
+Port = 1883
+MQTT UserName = mqtt_user_name
+MQTT PWD = mqtt_password
+Client ID = mqtt_clientID
+
+MQTT Message Send : esp32-sniffer/12345678/ble => Hello from MQTT_ThingStream on NUCLEO_F767ZI with LAN8742A Ethernet & STM32Ethernet Library
+
+MQTT Message receive [esp32-sniffer/12345678/ble] Hello from MQTT_ThingStream on NUCLEO_F767ZI with LAN8742A Ethernet & STM32Ethernet Library
+HH
+MQTT Message Send : esp32-sniffer/12345678/ble => Hello from MQTT_ThingStream on NUCLEO_F767ZI with LAN8742A Ethernet & STM32Ethernet Library
+
+MQTT Message receive [esp32-sniffer/12345678/ble] Hello from MQTT_ThingStream on NUCLEO_F767ZI with LAN8742A Ethernet & STM32Ethernet Library
+HH
+MQTT Message Send : esp32-sniffer/12345678/ble => Hello from MQTT_ThingStream on NUCLEO_F767ZI with LAN8742A Ethernet & STM32Ethernet Library
+
+MQTT Message receive [esp32-sniffer/12345678/ble] Hello from MQTT_ThingStream on NUCLEO_F767ZI with LAN8742A Ethernet & STM32Ethernet Library
+HH
+```
+
 ---
+---
+
+### Debug
+
+Debug is enabled by default on Serial.
+
+You can also change the debugging level from 0 to 4
+
+```cpp
+/* Comment this out to disable prints and save space */
+#define ETHERNET_MANAGER_STM32_DEBUG_PORT       Serial
+
+// Debug Level from 0 to 4
+#define _ETHERNET_WEBSERVER_LOGLEVEL_           0
+#define _ETHERNET_MANAGER_STM32_LOGLEVEL_       2
+
+#define DRD_GENERIC_DEBUG                       true
+```
+
+---
+
+### Troubleshooting
+
+If you get compilation errors, more often than not, you may need to install a newer version of the core for Arduino boards.
+
+Sometimes, the library will only work if you update the board core to the latest version because I am using newly added functions.
+
+---
+---
+
+## Releases
+
+### Releases v1.0.1
+
+1. Clean-up all compiler warnings possible.
+2. Add Table of Contents
 
 ### Releases v1.0.0
 
@@ -1445,7 +1724,7 @@ HHFFHHH    **<==== Check connection report by removing Ethernet Cable**
 - Generic Flight Controllers
 - Midatronics boards
  
-#### Supporting Ethernet shields/modules:
+#### Supported Ethernet shields/modules:
 
 1. Built-in LAN8742A Ethernet using [`STM32Ethernet library v1.2.0+`](https://github.com/stm32duino/STM32Ethernet) and [`LwIP library v2.1.2+`](https://github.com/stm32duino/LwIP)
 2. W5x00 using [`Ethernet`](https://www.arduino.cc/en/Reference/Ethernet), [`EthernetLarge`](https://github.com/OPEnSLab-OSU/EthernetLarge), [`Ethernet2`](https://github.com/adafruit/Ethernet2) or [`Ethernet3`](https://github.com/sstaub/Ethernet3) library
@@ -1454,32 +1733,6 @@ HHFFHHH    **<==== Check connection report by removing Ethernet Cable**
 
 ---
 ---
-
-### Debug
-
-Debug is enabled by default on Serial.
-
-You can also change the debugging level from 0 to 4
-
-```cpp
-/* Comment this out to disable prints and save space */
-#define ETHERNET_MANAGER_STM32_DEBUG_PORT       Serial
-
-// Debug Level from 0 to 4
-#define _ETHERNET_WEBSERVER_LOGLEVEL_           0
-#define _ETHERNET_MANAGER_STM32_LOGLEVEL_       2
-
-#define DRD_GENERIC_DEBUG                       true
-```
-
----
-
-### Troubleshooting
-
-If you get compilation errors, more often than not, you may need to install a newer version of the core for Arduino boards.
-
-Sometimes, the library will only work if you update the board core to the latest version because I am using newly added functions.
-
 
 ### Issues ###
 
@@ -1515,6 +1768,17 @@ Submit issues to: [Ethernet_Manager_STM32 issues](https://github.com/khoih-prog/
 
 ---
 
+### Contributions and Thanks
+
+1. Thanks to [Miguel Alexandre Wisintainer](https://github.com/tcpipchip) for initiating, inspriring, working with, developing, debugging and testing.
+
+<table>
+  <tr>
+    <td align="center"><a href="https://github.com/tcpipchip"><img src="https://github.com/tcpipchip.png" width="100px;" alt="tcpipchip"/><br /><sub><b>⭐️ Miguel Wisintainer</b></sub></a><br /></td>
+  </tr> 
+</table>
+
+---
 
 ### Contributing
 

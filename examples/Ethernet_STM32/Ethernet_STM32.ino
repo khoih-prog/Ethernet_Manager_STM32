@@ -7,11 +7,12 @@
 
   Built by Khoi Hoang https://github.com/khoih-prog/Ethernet_Manager_STM32
   Licensed under MIT license
-  Version: 1.0.0
+  Version: 1.0.1
 
   Version  Modified By   Date      Comments
   -------  -----------  ---------- -----------
   1.0.0     K Hoang     16/12/2020 Initial coding.
+  1.0.1     K Hoang     29/12/2020 Suppress all possible compiler warnings
  *****************************************************************************************************************************/
 
 #include "defines.h"
@@ -36,7 +37,7 @@ void heartBeatPrint()
 #if (USE_ETHERNET2 || USE_ETHERNET3)
   // To modify Ethernet2 library
   linkStatus = Ethernet.link();
-  ET_LOGINFO3("localEthernetIP = ", localEthernetIP, ", linkStatus = ", (linkStatus == 1) ? "LinkON" : "LinkOFF" );
+  ET_LOGINFO3(F("localEthernetIP = "), localEthernetIP, F(", linkStatus = "), (linkStatus == 1) ? F("LinkON") : F("LinkOFF") );
   
   if ( ( linkStatus == 1 ) && ((uint32_t) localEthernetIP != 0) )
 #else
@@ -44,7 +45,7 @@ void heartBeatPrint()
   // The linkStatus() is not working with W5100. Just using IP != 0.0.0.0
   // Better to use ping for W5100
   linkStatus = (int) Ethernet.linkStatus();
-  ET_LOGINFO3("localEthernetIP = ", localEthernetIP, ", linkStatus = ", (linkStatus == LinkON) ? "LinkON" : "LinkOFF" );
+  ET_LOGINFO3(F("localEthernetIP = "), localEthernetIP, F(", linkStatus = "), (linkStatus == LinkON) ? F("LinkON") : F("LinkOFF") );
   
   if ( ( (linkStatus == LinkON) || !isW5500 ) && ((uint32_t) localEthernetIP != 0) )
 #endif
@@ -85,9 +86,12 @@ void setup()
   Serial.begin(115200);
   while (!Serial);
 
-  Serial.println("\nStart Ethernet_STM32 on " + String(BOARD_NAME)); 
-  Serial.println("Ethernet Shield type : " + String(SHIELD_TYPE));
+  Serial.print(F("\nStart Ethernet_STM32 on "));
+  Serial.println(BOARD_NAME);
+  Serial.print(F("Ethernet Shield type : "));
+  Serial.println(SHIELD_TYPE);
   Serial.println(ETHERNET_MANAGER_STM32_VERSION);
+  Serial.println(DOUBLERESETDETECTOR_GENERIC_VERSION);
 
   #if ( defined(USE_BUILTIN_ETHERNET) && USE_BUILTIN_ETHERNET )
     ET_LOGWARN(F("======== USE_BUILTIN_ETHERNET ========"));
@@ -200,18 +204,20 @@ void setup()
 #if ( USE_ETHERNET || USE_ETHERNET_LARGE)
   isW5500 = (Ethernet.hardwareStatus() == EthernetW5500);
   Serial.print(F("Ethernet type is "));
-  Serial.println(isW5500 ? "W5500" : "W5100");
+  Serial.println(isW5500 ? F("W5500") : F("W5100"));
 #endif
 }
 
 #if (USE_DYNAMIC_PARAMETERS)
 void displayCredentials()
 {
-  Serial.println("\nYour stored Credentials :");
+  Serial.println(F("\nYour stored Credentials :"));
 
   for (int i = 0; i < NUM_MENU_ITEMS; i++)
   {
-    Serial.println(String(myMenuItems[i].displayName) + " = " + myMenuItems[i].pdata);
+    Serial.print(myMenuItems[i].displayName);
+    Serial.print(" = ");
+    Serial.println(myMenuItems[i].pdata);
   }
 }
 

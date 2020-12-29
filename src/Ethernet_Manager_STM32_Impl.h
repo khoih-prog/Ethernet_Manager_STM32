@@ -7,11 +7,12 @@
 
   Built by Khoi Hoang https://github.com/khoih-prog/Ethernet_Manager_STM32
   Licensed under MIT license
-  Version: 1.0.0
+  Version: 1.0.1
 
   Version  Modified By   Date      Comments
   -------  -----------  ---------- -----------
   1.0.0     K Hoang     16/12/2020 Initial coding.
+  1.0.1     K Hoang     29/12/2020 Suppress all possible compiler warnings
  *****************************************************************************************************************************/
 
 #pragma once
@@ -177,8 +178,6 @@ class Ethernet_Manager
     // Return true if still in CP mode
     bool run()
     {
-      static int retryTimes = 0;
-
       //// New DRD ////
       // Call the double reset detector loop method every so often,
       // so that it can recognise when the timeout expires.
@@ -256,7 +255,7 @@ class Ethernet_Manager
     {
       memset(&Ethernet_Manager_config, 0, sizeof(Ethernet_Manager_config));
       
-      for (int i = 0; i < NUM_MENU_ITEMS; i++)
+      for (uint16_t i = 0; i < NUM_MENU_ITEMS; i++)
       {
         // Actual size of pdata is [maxlen + 1]
         memset(myMenuItems[i].pdata, 0, myMenuItems[i].maxlen + 1);
@@ -280,7 +279,9 @@ class Ethernet_Manager
     // (port 80 is default for HTTP):
     EthernetWebServer server;
 
-    bool ethernetConnected = false;
+    bool ethernetConnected  = false;
+    
+    int  retryTimes         = 0;
 
     bool configuration_mode = false;
 
@@ -344,7 +345,7 @@ class Ethernet_Manager
                  F(", BoardName="),    configData.board_name);
       ETM_LOGWARN1(F("StaticIP="),      configData.static_IP);
                  
-      for (int i = 0; i < NUM_MENU_ITEMS; i++)
+      for (uint16_t i = 0; i < NUM_MENU_ITEMS; i++)
       {
         ETM_LOGINFO3("i=", i, ",id=", myMenuItems[i].id);
         ETM_LOGINFO1("data=", myMenuItems[i].pdata);
@@ -379,7 +380,7 @@ class Ethernet_Manager
       int e = idx;
       uint8_t *ptr = (uint8_t *) &t;
 
-      for (int count = sizeof(T) ; count ; --count, ++e)
+      for (uint16_t count = sizeof(T) ; count ; --count, ++e)
       {
         *ptr++ = eeprom_buffered_read_byte(e);
       }
@@ -391,7 +392,7 @@ class Ethernet_Manager
       int e = idx;
       const uint8_t *ptr = (const uint8_t *) &t;
 
-      for (int count = sizeof(T) ; count ; --count, ++e)
+      for (uint16_t count = sizeof(T) ; count ; --count, ++e)
       {
         eeprom_buffered_write_byte(e, *ptr++);
       }
@@ -407,7 +408,6 @@ class Ethernet_Manager
       int readCheckSum;
       
       #define BUFFER_LEN      128
-      char readBuffer[BUFFER_LEN + 1];
       
       uint16_t offset = ETHERNET_MANAGER_EEPROM_START + sizeof(Ethernet_Manager_config);
                 
@@ -415,7 +415,7 @@ class Ethernet_Manager
       // This is used to store tempo data to calculate checksum to see of data is valid
       // We dont like to destroy myMenuItems[i].pdata with invalid data
       
-      for (int i = 0; i < NUM_MENU_ITEMS; i++)
+      for (uint16_t i = 0; i < NUM_MENU_ITEMS; i++)
       {       
         if (myMenuItems[i].maxlen > BUFFER_LEN)
         {
@@ -425,7 +425,7 @@ class Ethernet_Manager
         }
       }
          
-      for (int i = 0; i < NUM_MENU_ITEMS; i++)
+      for (uint16_t i = 0; i < NUM_MENU_ITEMS; i++)
       {       
         char* _pointer = myMenuItems[i].pdata;
         totalDataSize += myMenuItems[i].maxlen;
@@ -461,7 +461,7 @@ class Ethernet_Manager
            
       totalDataSize = sizeof(Ethernet_Manager_config) + sizeof(readCheckSum);
       
-      for (int i = 0; i < NUM_MENU_ITEMS; i++)
+      for (uint16_t i = 0; i < NUM_MENU_ITEMS; i++)
       {       
         char* _pointer = myMenuItems[i].pdata;
         totalDataSize += myMenuItems[i].maxlen;
@@ -494,7 +494,7 @@ class Ethernet_Manager
       int checkSum = 0;
       uint16_t offset = ETHERNET_MANAGER_EEPROM_START + sizeof(Ethernet_Manager_config);
                 
-      for (int i = 0; i < NUM_MENU_ITEMS; i++)
+      for (uint16_t i = 0; i < NUM_MENU_ITEMS; i++)
       {       
         char* _pointer = myMenuItems[i].pdata;
         
@@ -598,7 +598,7 @@ class Ethernet_Manager
         {  
           memset(&Ethernet_Manager_config, 0, sizeof(Ethernet_Manager_config));
 
-          for (int i = 0; i < NUM_MENU_ITEMS; i++)
+          for (uint16_t i = 0; i < NUM_MENU_ITEMS; i++)
           {
             // Actual size of pdata is [maxlen + 1]
             memset(myMenuItems[i].pdata, 0, myMenuItems[i].maxlen + 1);
@@ -611,7 +611,7 @@ class Ethernet_Manager
           strcpy(Ethernet_Manager_config.static_IP,   WM_NO_CONFIG);
           strcpy(Ethernet_Manager_config.board_name,  WM_NO_CONFIG);
 
-          for (int i = 0; i < NUM_MENU_ITEMS; i++)
+          for (uint16_t i = 0; i < NUM_MENU_ITEMS; i++)
           {
             strncpy(myMenuItems[i].pdata, WM_NO_CONFIG, myMenuItems[i].maxlen);
           }
@@ -619,7 +619,7 @@ class Ethernet_Manager
         
         strcpy(Ethernet_Manager_config.header, ETHERNET_BOARD_TYPE);
 
-        for (int i = 0; i < NUM_MENU_ITEMS; i++)
+        for (uint16_t i = 0; i < NUM_MENU_ITEMS; i++)
         {
           ETM_LOGDEBUG3(F("g:myMenuItems["), i, F("]="), myMenuItems[i].pdata );
         }
@@ -651,7 +651,7 @@ class Ethernet_Manager
       {
         root_html_template += String(ETM_FLDSET_START);
            
-        for (int i = 0; i < NUM_MENU_ITEMS; i++)
+        for (uint16_t i = 0; i < NUM_MENU_ITEMS; i++)
         {
           pitem = String(ETM_HTML_PARAM);
 
@@ -669,7 +669,7 @@ class Ethernet_Manager
            
       if (NUM_MENU_ITEMS > 0)
       {        
-        for (int i = 0; i < NUM_MENU_ITEMS; i++)
+        for (uint16_t i = 0; i < NUM_MENU_ITEMS; i++)
         {
           pitem = String(ETM_HTML_SCRIPT_ITEM);
           
@@ -717,7 +717,7 @@ class Ethernet_Manager
         result.replace("[[ip]]", Ethernet_Manager_config.static_IP);
         result.replace("[[nm]]", Ethernet_Manager_config.board_name);
 
-        for (int i = 0; i < NUM_MENU_ITEMS; i++)
+        for (uint16_t i = 0; i < NUM_MENU_ITEMS; i++)
         {
           String toChange = String("[[") + myMenuItems[i].id + "]]";
           result.replace(toChange, myMenuItems[i].pdata);
@@ -763,7 +763,7 @@ class Ethernet_Manager
 
       //ETM_LOGINFO(F("h:OK"));
 
-      for (int i = 0; i < NUM_MENU_ITEMS; i++)
+      for (uint16_t i = 0; i < NUM_MENU_ITEMS; i++)
       {
         if (key == myMenuItems[i].id)
         {

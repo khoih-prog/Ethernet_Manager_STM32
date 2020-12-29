@@ -7,11 +7,12 @@
 
   Built by Khoi Hoang https://github.com/khoih-prog/Ethernet_Manager_STM32
   Licensed under MIT license
-  Version: 1.0.0
+  Version: 1.0.1
 
   Version  Modified By   Date      Comments
   -------  -----------  ---------- -----------
   1.0.0     K Hoang     16/12/2020 Initial coding.
+  1.0.1     K Hoang     29/12/2020 Suppress all possible compiler warnings
  *****************************************************************************************************************************/
 
 #include "defines.h"
@@ -49,13 +50,15 @@ IPAddress localEthernetIP;
 
 ///////////// Start MQTT ThingStream ///////////////
 
+String data         = "Hello from MQTT_ThingStream on " + String(BOARD_NAME) + " with " + String(SHIELD_TYPE);
+const char *pubData = data.c_str();
+
 void mqtt_receive_callback(char* topic, byte* payload, unsigned int length);
 
 unsigned long lastMsg = 0;
 
 // Initialize the SSL client library
 // Arguments: EthernetClient, our trust anchors
-
 
 EthernetClient    ethClient;
 
@@ -67,11 +70,11 @@ PubSubClient* client = NULL;
 */
 void mqtt_receive_callback(char* topic, byte* payload, unsigned int length) 
 {
-  Serial.print("\nMQTT Message receive [");
+  Serial.print(F("\nMQTT Message receive ["));
   Serial.print(topic);
-  Serial.print("] ");
+  Serial.print(F("] "));
   
-  for (int i = 0; i < length; i++) 
+  for (unsigned int i = 0; i < length; i++) 
   {
     Serial.print((char)payload[i]);
   }
@@ -80,11 +83,11 @@ void mqtt_receive_callback(char* topic, byte* payload, unsigned int length)
 }
 
 void reconnect() 
-{
+{     
   // Loop until we're reconnected
   while (!client->connected()) 
   {
-    Serial.print("Attempting MQTT connection to ");
+    Serial.print(F("Attempting MQTT connection to "));
     Serial.println(MQTT_SERVER);
 
     // Attempt to connect
@@ -93,16 +96,13 @@ void reconnect()
 
     if (connect_status)                                
     {
-      Serial.println("...connected");
-      
-      // Once connected, publish an announcement...
-      String data = "Hello from MQTTClient_SSL on " + String(BOARD_NAME);
+      Serial.println(F("...connected"));
 
-      client->publish(topic.c_str(), data.c_str());
+      client->publish(topic.c_str(), pubData);
 
-      Serial.println("Published connection message successfully!");
+      Serial.println(F("Published connection message successfully!"));
      
-      Serial.print("Subcribed to: ");
+      Serial.print(F("Subcribed to: "));
       Serial.println(subTopic);
       
       // ... and resubscribe
@@ -112,9 +112,9 @@ void reconnect()
     } 
     else 
     {
-      Serial.print("failed, rc=");
+      Serial.print(F("failed, rc="));
       Serial.print(client->state());
-      Serial.println(" try again in 5 seconds");
+      Serial.println(F(" try again in 5 seconds"));
       
       // Wait 5 seconds before retrying
       delay(5000);
@@ -138,7 +138,7 @@ void heartBeatPrint()
 #if (USE_ETHERNET2 || USE_ETHERNET3)
   // To modify Ethernet2 library
   linkStatus = Ethernet.link();
-  ET_LOGINFO3("localEthernetIP = ", localEthernetIP, ", linkStatus = ", (linkStatus == 1) ? "LinkON" : "LinkOFF" );
+  ET_LOGINFO3(F("localEthernetIP = "), localEthernetIP, F(", linkStatus = "), (linkStatus == 1) ? F("LinkON") : F("LinkOFF") );
   
   if ( ( linkStatus == 1 ) && ((uint32_t) localEthernetIP != 0) )
 #else
@@ -146,7 +146,7 @@ void heartBeatPrint()
   // The linkStatus() is not working with W5100. Just using IP != 0.0.0.0
   // Better to use ping for W5100
   linkStatus = (int) Ethernet.linkStatus();
-  ET_LOGINFO3("localEthernetIP = ", localEthernetIP, ", linkStatus = ", (linkStatus == LinkON) ? "LinkON" : "LinkOFF" );
+  ET_LOGINFO3(F("localEthernetIP = "), localEthernetIP, F(", linkStatus = "), (linkStatus == LinkON) ? F("LinkON") : F("LinkOFF") );
   
   if ( ( (linkStatus == LinkON) || !isW5500 ) && ((uint32_t) localEthernetIP != 0) )
 #endif
@@ -187,9 +187,12 @@ void setup()
   Serial.begin(115200);
   while (!Serial);
 
-  Serial.println("\nStart MQTT_ThingStream_Ethernet_STM32 on " + String(BOARD_NAME)); 
-  Serial.println("Ethernet Shield type : " + String(SHIELD_TYPE));
+  Serial.print(F("\nStart MQTT_ThingStream_Ethernet_STM32 on "));
+  Serial.println(BOARD_NAME);
+  Serial.print(F("Ethernet Shield type : "));
+  Serial.println(SHIELD_TYPE);
   Serial.println(ETHERNET_MANAGER_STM32_VERSION);
+  Serial.println(DOUBLERESETDETECTOR_GENERIC_VERSION);
 
   #if ( defined(USE_BUILTIN_ETHERNET) && USE_BUILTIN_ETHERNET )
     ET_LOGWARN(F("======== USE_BUILTIN_ETHERNET ========"));
@@ -302,22 +305,24 @@ void setup()
 #if ( USE_ETHERNET || USE_ETHERNET_LARGE)
   isW5500 = (Ethernet.hardwareStatus() == EthernetW5500);
   Serial.print(F("Ethernet type is "));
-  Serial.println(isW5500 ? "W5500" : "W5100");
+  Serial.println(isW5500 ? F("W5500") : F("W5100"));
 #endif
   
-  Serial.println("***************************************");
+  Serial.println(F("***************************************"));
   Serial.println(topic);
-  Serial.println("***************************************");
+  Serial.println(F("***************************************"));
 }
 
 #if (USE_DYNAMIC_PARAMETERS)
 void displayCredentials()
 {
-  Serial.println("\nYour stored Credentials :");
+  Serial.println(F("\nYour stored Credentials :"));
 
   for (int i = 0; i < NUM_MENU_ITEMS; i++)
   {
-    Serial.println(String(myMenuItems[i].displayName) + " = " + myMenuItems[i].pdata);
+    Serial.print(myMenuItems[i].displayName);
+    Serial.print(F(" = "));
+    Serial.println(myMenuItems[i].pdata);
   }
 }
 
@@ -345,9 +350,6 @@ void displayCredentialsOnce()
 #endif
 
 #define MQTT_PUBLISH_INTERVAL_MS      20000L
-
-String data         = "Hello from MQTT_ThingStream on " + String(BOARD_NAME) + " with " + String(SHIELD_TYPE);
-const char *pubData = data.c_str();
 
 void loop()
 {
@@ -383,10 +385,12 @@ void loop()
   
       if (!client->publish(topic.c_str(), pubData))
       {
-        Serial.println("Message failed to send.");
+        Serial.println(F("Message failed to send."));
       }
   
-      Serial.print("\nMQTT Message Send : " + topic + " => ");
+      Serial.print(F("\nMQTT Message Send : "));
+      Serial.print(topic);
+      Serial.print(F(" => "));
       Serial.println(data);
     }
     

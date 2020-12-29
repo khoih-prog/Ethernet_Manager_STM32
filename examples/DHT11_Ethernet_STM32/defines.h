@@ -7,11 +7,12 @@
 
   Built by Khoi Hoang https://github.com/khoih-prog/Ethernet_Manager_STM32
   Licensed under MIT license
-  Version: 1.0.0
+  Version: 1.0.1
 
   Version  Modified By   Date      Comments
   -------  -----------  ---------- -----------
   1.0.0     K Hoang     16/12/2020 Initial coding.
+  1.0.1     K Hoang     29/12/2020 Suppress all possible compiler warnings
  *****************************************************************************************************************************/
 
 #ifndef defines_h
@@ -29,6 +30,9 @@
   #error This code is designed to run on STM32F/L/H/G/WB/MP1 platform! Please check your Tools->Board setting.  
 #endif
 
+// To suppress boolean warnings of old libraries
+#define boolean   bool
+
 /* Comment this out to disable prints and save space */
 #define ETHERNET_MANAGER_STM32_DEBUG_PORT       Serial
 
@@ -45,12 +49,12 @@
 #define USE_THIS_SS_PIN       10
 
 // Only one if the following to be true
-#define USE_BUILTIN_ETHERNET  false
+#define USE_BUILTIN_ETHERNET  true
 #define USE_ETHERNET          false
 #define USE_ETHERNET2         false
 #define USE_ETHERNET3         false
 #define USE_ETHERNET_LARGE    false
-#define USE_ETHERNET_ENC      true
+#define USE_ETHERNET_ENC      false
 #define USE_UIP_ETHERNET      false
 #define USE_CUSTOM_ETHERNET   false
 
@@ -111,16 +115,7 @@
 
 //////////////////////////////////////////
 
-//#define USE_SSL   true
-#define USE_SSL   false
-
-#if USE_SSL
-  // Need ArduinoECCX08 and ArduinoBearSSL libraries
-  // Currently, error not enough memory for UNO, Mega2560. Don't use
-  #include <EthernetSSL_Manager_STM32.h>
-#else
-  #include <Ethernet_Manager_STM32.h>
-#endif
+#include <Ethernet_Manager_STM32.h>
 
 #ifndef SHIELD_TYPE
   #define SHIELD_TYPE     "Unknown Ethernet shield/library" 

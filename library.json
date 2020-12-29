@@ -1,8 +1,8 @@
 {
   "name": "Ethernet_Manager_STM32",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Simple Ethernet Manager for STM32F/L/H/G/WB/MP1 boards with Ethernet W5x00, ENC28J60 or built-in LAN8742A shields, with or without SSL, configuration data saved in EEPROM. With DoubleResetDetect feature.",
-  "keywords": "communication, ethernet, data, http, W5500, W5x00, ENC28J60, STM32, Credentials, Manager, Config Portal, Double, Reset, Detector, MQTT, DynamicParameters",
+  "keywords": "communication, ethernet, data, http, W5500, W5x00, ENC28J60, STM32, Credentials, Manager, Config Portal, Double, Reset, double-reset, Detector, MQTT, DynamicParameters",
   "authors":
   {
     "name":  "Khoi Hoang",

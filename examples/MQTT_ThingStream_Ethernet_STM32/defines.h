@@ -7,11 +7,12 @@
 
   Built by Khoi Hoang https://github.com/khoih-prog/Ethernet_Manager_STM32
   Licensed under MIT license
-  Version: 1.0.0
+  Version: 1.0.1
 
   Version  Modified By   Date      Comments
   -------  -----------  ---------- -----------
   1.0.0     K Hoang     16/12/2020 Initial coding.
+  1.0.1     K Hoang     29/12/2020 Suppress all possible compiler warnings
  *****************************************************************************************************************************/
 
 #ifndef defines_h
@@ -28,6 +29,9 @@
 #else
   #error This code is designed to run on STM32F/L/H/G/WB/MP1 platform! Please check your Tools->Board setting.  
 #endif
+
+// To suppress boolean warnings of old libraries
+#define boolean   bool
 
 /* Comment this out to disable prints and save space */
 #define ETHERNET_MANAGER_STM32_DEBUG_PORT       Serial
@@ -55,54 +59,54 @@
 #define USE_CUSTOM_ETHERNET   false
 
 #if defined(STM32F0)
-  #warning STM32F0 board selected
-  #define BOARD_TYPE  "STM32F0"
+#warning STM32F0 board selected
+#define BOARD_TYPE  "STM32F0"
 #elif defined(STM32F1)
-  #warning STM32F1 board selected
-  #define BOARD_TYPE  "STM32F1"
+#warning STM32F1 board selected
+#define BOARD_TYPE  "STM32F1"
 #elif defined(STM32F2)
-  #warning STM32F2 board selected
-  #define BOARD_TYPE  "STM32F2"
+#warning STM32F2 board selected
+#define BOARD_TYPE  "STM32F2"
 #elif defined(STM32F3)
-  #warning STM32F3 board selected
-  #define BOARD_TYPE  "STM32F3"
+#warning STM32F3 board selected
+#define BOARD_TYPE  "STM32F3"
 #elif defined(STM32F4)
-  #warning STM32F4 board selected
-  #define BOARD_TYPE  "STM32F4"
+#warning STM32F4 board selected
+#define BOARD_TYPE  "STM32F4"
 #elif defined(STM32F7)
-  #warning STM32F7 board selected
-  #define BOARD_TYPE  "STM32F7"
+#warning STM32F7 board selected
+#define BOARD_TYPE  "STM32F7"
 #elif defined(STM32L0)
-  #warning STM32L0 board selected
-  #define BOARD_TYPE  "STM32L0"
+#warning STM32L0 board selected
+#define BOARD_TYPE  "STM32L0"
 #elif defined(STM32L1)
-  #warning STM32L1 board selected
-  #define BOARD_TYPE  "STM32L1"
+#warning STM32L1 board selected
+#define BOARD_TYPE  "STM32L1"
 #elif defined(STM32L4)
-  #warning STM32L4 board selected
-  #define BOARD_TYPE  "STM32L4"
+#warning STM32L4 board selected
+#define BOARD_TYPE  "STM32L4"
 #elif defined(STM32H7)
-  #warning STM32H7 board selected
-  #define BOARD_TYPE  "STM32H7"
+#warning STM32H7 board selected
+#define BOARD_TYPE  "STM32H7"
 #elif defined(STM32G0)
-  #warning STM32G0 board selected
-  #define BOARD_TYPE  "STM32G0"
+#warning STM32G0 board selected
+#define BOARD_TYPE  "STM32G0"
 #elif defined(STM32G4)
-  #warning STM32G4 board selected
-  #define BOARD_TYPE  "STM32G4"
+#warning STM32G4 board selected
+#define BOARD_TYPE  "STM32G4"
 #elif defined(STM32WB)
-  #warning STM32WB board selected
-  #define BOARD_TYPE  "STM32WB"
+#warning STM32WB board selected
+#define BOARD_TYPE  "STM32WB"
 #elif defined(STM32MP1)
-  #warning STM32MP1 board selected
-  #define BOARD_TYPE  "STM32MP1"
+#warning STM32MP1 board selected
+#define BOARD_TYPE  "STM32MP1"
 #else
-  #warning STM32 unknown board selected
-  #define BOARD_TYPE  "STM32 Unknown"
+#warning STM32 unknown board selected
+#define BOARD_TYPE  "STM32 Unknown"
 #endif
 
 #ifndef BOARD_NAME
-  #define BOARD_NAME    BOARD_TYPE
+#define BOARD_NAME    BOARD_TYPE
 #endif
 
 //////////////////////////////////////////
@@ -111,19 +115,10 @@
 
 //////////////////////////////////////////
 
-//#define USE_SSL   true
-#define USE_SSL   false
-
-#if USE_SSL
-  // Need ArduinoECCX08 and ArduinoBearSSL libraries
-  // Currently, error not enough memory for UNO, Mega2560. Don't use
-  #include <EthernetSSL_Manager_STM32.h>
-#else
-  #include <Ethernet_Manager_STM32.h>
-#endif
+#include <Ethernet_Manager_STM32.h>
 
 #ifndef SHIELD_TYPE
-  #define SHIELD_TYPE     "Unknown Ethernet shield/library" 
+#define SHIELD_TYPE     "Unknown Ethernet shield/library"
 #endif
 
 #define W5100_CS        10
