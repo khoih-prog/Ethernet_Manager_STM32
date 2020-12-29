@@ -33,7 +33,6 @@
   * [4. For Etherne2 library](#4-for-ethernet2-library)
   * [5. For Ethernet3 library](#5-for-ethernet3-library)
   * [6. For UIPEthernet library](#6-for-uipethernet-library)
-  * [7. For fixing ESP32 compile error](#7-for-fixing-esp32-compile-error) 
 * [Configuration Notes](#configuration-notes)
   * [1. How to select which built-in Ethernet or shield to use](#1-how-to-select-which-built-in-ethernet-or-shield-to-use)
   * [2. How to select another CS/SS pin to use](#2-how-to-select-another-csss-pin-to-use)
