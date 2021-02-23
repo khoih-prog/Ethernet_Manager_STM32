@@ -7,12 +7,6 @@
 
   Built by Khoi Hoang https://github.com/khoih-prog/Ethernet_Manager_STM32
   Licensed under MIT license
-  Version: 1.0.1
-
-  Version  Modified By   Date      Comments
-  -------  -----------  ---------- -----------
-  1.0.0     K Hoang     16/12/2020 Initial coding.
-  1.0.1     K Hoang     29/12/2020 Suppress all possible compiler warnings
  *****************************************************************************************************************************/
 
 #ifndef dynamicParams_h
@@ -20,11 +14,11 @@
 
 #include "defines.h"
 
-#define USE_DYNAMIC_PARAMETERS      true
+// USE_DYNAMIC_PARAMETERS defined in defined.h
 
 /////////////// Start dynamic Credentials ///////////////
 
-//Defined in BlynkEthernet_WM.h, <BlynkEthernet_ESP8266_WM.h>, <BlynkEthernet_ESP32 or_WM.h>
+//Defined in <Ethernet_Manager_STM32_Impl.h>
 /**************************************
   #define MAX_ID_LEN                5
   #define MAX_DISPLAY_NAME_LEN      16

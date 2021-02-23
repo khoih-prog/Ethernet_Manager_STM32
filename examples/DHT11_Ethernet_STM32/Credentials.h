@@ -7,12 +7,6 @@
 
   Built by Khoi Hoang https://github.com/khoih-prog/Ethernet_Manager_STM32
   Licensed under MIT license
-  Version: 1.0.1
-
-  Version  Modified By   Date      Comments
-  -------  -----------  ---------- -----------
-  1.0.0     K Hoang     16/12/2020 Initial coding.
-  1.0.1     K Hoang     29/12/2020 Suppress all possible compiler warnings
  *****************************************************************************************************************************/
 
 #ifndef Credentials_h
@@ -36,7 +30,7 @@ typedef struct Configuration
 
 #if TO_LOAD_DEFAULT_CONFIG_DATA
 
-bool LOAD_DEFAULT_CONFIG_DATA = true;
+bool LOAD_DEFAULT_CONFIG_DATA = false;
 
 Ethernet_Configuration defaultConfig =
 {

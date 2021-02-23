@@ -7,12 +7,13 @@
 
   Built by Khoi Hoang https://github.com/khoih-prog/Ethernet_Manager_STM32
   Licensed under MIT license
-  Version: 1.0.1
+  Version: 1.2.0
 
   Version  Modified By   Date      Comments
   -------  -----------  ---------- -----------
   1.0.0     K Hoang     16/12/2020 Initial coding.
   1.0.1     K Hoang     29/12/2020 Suppress all possible compiler warnings
+  1.2.0     K Hoang     23/02/2021 Optimize code and use better FlashStorage_STM32. Add customs HTML header feature. Fix bug.
  *****************************************************************************************************************************/
 
 #include "defines.h"
@@ -79,6 +80,11 @@ void check_status()
     checkstatus_timeout = millis() + STATUS_CHECK_INTERVAL;
   }
 }
+
+#if USING_CUSTOMS_STYLE
+const char NewCustomsStyle[] /*PROGMEM*/ = "<style>div,input{padding:5px;font-size:1em;}input{width:95%;}body{text-align: center;}\
+button{background-color:blue;color:white;line-height:2.4rem;font-size:1.2rem;width:100%;}fieldset{border-radius:0.3rem;margin:0px;}</style>";
+#endif
 
 void setup()
 {
@@ -181,7 +187,23 @@ void setup()
 #endif
   ET_LOGWARN(F("========================="));
  
+  //////////////////////////////////////////////
+  
+#if USING_CUSTOMS_STYLE
+  ethernet_manager.setCustomsStyle(NewCustomsStyle);
+#endif
+
+#if USING_CUSTOMS_HEAD_ELEMENT
+  ethernet_manager.setCustomsHeadElement("<style>html{filter: invert(10%);}</style>");
+#endif
+
+#if USING_CORS_FEATURE  
+  ethernet_manager.setCORSHeader("Your Access-Control-Allow-Origin");
+#endif
+
   ethernet_manager.begin();
+
+  //////////////////////////////////////////////
 
   localEthernetIP = Ethernet.localIP();
 
@@ -213,7 +235,7 @@ void displayCredentials()
 {
   Serial.println(F("\nYour stored Credentials :"));
 
-  for (int i = 0; i < NUM_MENU_ITEMS; i++)
+  for (uint16_t i = 0; i < NUM_MENU_ITEMS; i++)
   {
     Serial.print(myMenuItems[i].displayName);
     Serial.print(" = ");
@@ -227,7 +249,7 @@ void displayCredentialsOnce()
 
   if (!displayedCredentials)
   {
-    for (int i = 0; i < NUM_MENU_ITEMS; i++)
+    for (uint16_t i = 0; i < NUM_MENU_ITEMS; i++)
     {
       if (!strlen(myMenuItems[i].pdata))
       {

@@ -7,12 +7,6 @@
 
   Built by Khoi Hoang https://github.com/khoih-prog/Ethernet_Manager_STM32
   Licensed under MIT license
-  Version: 1.0.1
-
-  Version  Modified By   Date      Comments
-  -------  -----------  ---------- -----------
-  1.0.0     K Hoang     16/12/2020 Initial coding.
-  1.0.1     K Hoang     29/12/2020 Suppress all possible compiler warnings
  *****************************************************************************************************************************/
 
 #ifndef defines_h
@@ -49,12 +43,12 @@
 #define USE_THIS_SS_PIN       10
 
 // Only one if the following to be true
-#define USE_BUILTIN_ETHERNET  false
+#define USE_BUILTIN_ETHERNET  true
 #define USE_ETHERNET          false
 #define USE_ETHERNET2         false
 #define USE_ETHERNET3         false
 #define USE_ETHERNET_LARGE    false
-#define USE_ETHERNET_ENC      true
+#define USE_ETHERNET_ENC      false
 #define USE_UIP_ETHERNET      false
 #define USE_CUSTOM_ETHERNET   false
 
@@ -112,6 +106,20 @@
 //////////////////////////////////////////
 
 #define EEPROM_START   0
+
+/////////////////////////////////////////////
+
+// Add customs headers from v1.2.0
+#define USING_CUSTOMS_STYLE                 true
+#define USING_CUSTOMS_HEAD_ELEMENT          true
+#define USING_CORS_FEATURE                  true
+
+/////////////////////////////////////////////
+
+// Config Timeout 120s (default 60s)
+#define CONFIG_TIMEOUT                      120000L
+
+#define USE_DYNAMIC_PARAMETERS              true
 
 //////////////////////////////////////////
 
