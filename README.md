@@ -17,6 +17,7 @@
   * [Currently supported Boards](#currently-supported-boards)
   * [Currently supported Ethernet shields/modules](#currently-supported-ethernet-shieldsmodules)
 * [Changelog](#changelog)
+  * [Major Releases v1.2.0](#major-releases-v120)
   * [Releases v1.0.1](#releases-v101)
   * [Releases v1.0.0](#releases-v100)
 * [Prerequisites](#prerequisites)
@@ -39,7 +40,14 @@
   * [3. How to increase W5x00 TX/RX buffer](#3-how-to-increase-w5x00-txrx-buffer)
   * [Not supported Libraries](#not-supported-libraries)
 * [How to use default Credentials and have them pre-loaded onto Config Portal](#how-to-use-default-credentials-and-have-them-pre-loaded-onto-config-portal)
-* [How to add dynamic parameters from sketch](#how-to-add-dynamic-parameters-from-sketch)
+* [How to use](#how-to-use)
+  * [1. Basic usage](#1-basic-usage)
+  * [2. Add custom parameters](#2-add-custom-parameters)
+  * [3. Not using custom parameters](#3-not-using-custom-parameters)
+  * [4. To open Config Portal](#4-to-open-config-portal)
+  * [5. To use custom HTML Style](#5-to-use-custom-html-style)
+  * [6. To use custom Head Elements](#6-to-use-custom-head-elements)
+  * [7. To use CORS Header](#7-to-use-cors-header)
 * [Important Notes for using Dynamic Parameters' ids](#important-notes-for-using-dynamic-parameters-ids)
 * [Examples](#examples)
   * [ 1. AM2315_Ethernet_STM32](examples/AM2315_Ethernet_STM32)
@@ -139,6 +147,15 @@ New recent features:
 
 ## Changelog
 
+### Major Releases v1.2.0
+
+1. Configurable **Customs HTML Headers**, including Customs Style, Customs Head Elements, CORS Header.
+2. Add functions to control Config Portal from software or Virtual Switches. Check [How to trigger a Config Portal from code #25](https://github.com/khoih-prog/Blynk_WM/issues/25)
+3. Use more efficient [**FlashStorage_STM32 v1.0.1**](https://github.com/khoih-prog/FlashStorage_STM32)
+4. Fix Config Portal Bug. 
+5. Update examples
+6. Bump up to version v1.2.0 to sync with [**Ethernet_Manager**](https://github.com/khoih-prog/Ethernet_Manager)
+
 ### Releases v1.0.1
 
 1. Clean-up all compiler warnings possible.
@@ -150,27 +167,28 @@ New recent features:
 2. Provide support to W5x00, ENC28J60 and built-in LAN8742A Ethernet.
 3. Supporting Ethernet, EthernetLarge, Ethernet2, Ethernet3, EthernetENC, UIPEthernet and STM32Ethernet Libraries
 
-
 ---
 ---
 
 ## Prerequisites
 
  1. [`Arduino IDE 1.8.13+` for Arduino](https://www.arduino.cc/en/Main/Software)
- 2. [`Arduino Core for STM32 1.9.0+`](https://github.com/stm32duino/Arduino_Core_STM32) for STM32 (Use Arduino Board Manager)
- 3. [`Functional-VLPP library v1.0.1+`](https://github.com/khoih-prog/functional-vlpp) to use server's lambda function. To install. check [![arduino-library-badge](https://www.ardu-badge.com/badge/Functional-Vlpp.svg?)](https://www.ardu-badge.com/Functional-Vlpp)
- 4. [`DoubleResetDetector_Generic library v1.0.3+`](https://github.com/khoih-prog/DoubleResetDetector_Generic). To install. check [![arduino-library-badge](https://www.ardu-badge.com/badge/DoubleResetDetector_Generic.svg?)](https://www.ardu-badge.com/DoubleResetDetector_Generic).
- 5. Depending on which Ethernet card you're using:
-   - [`STM32Ethernet library v1.2.0+`](https://github.com/stm32duino/STM32Ethernet) for built-in LAN8742A Ethernet on (Nucleo-144, Discovery)
-   - [`Ethernet library v2.0.0+`](https://www.arduino.cc/en/Reference/Ethernet) for W5100, W5200 and W5500.
+ 2. [`Arduino Core for STM32 v1.9.0+`](https://github.com/stm32duino/Arduino_Core_STM32) for STM32 boards. [![GitHub release](https://img.shields.io/github/release/stm32duino/Arduino_Core_STM32.svg)](https://github.com/stm32duino/Arduino_Core_STM32/releases/latest)
+ 3. [`EthernetWebServer_STM32 library v1.1.1+`](https://github.com/khoih-prog/EthernetWebServer_STM32). To install. check [![arduino-library-badge](https://www.ardu-badge.com/badge/EthernetWebServer_STM32.svg?)](https://www.ardu-badge.com/EthernetWebServer_STM32)
+ 4. [`Functional-VLPP library v1.0.2+`](https://github.com/khoih-prog/functional-vlpp) to use server's lambda function. To install. check [![arduino-library-badge](https://www.ardu-badge.com/badge/Functional-Vlpp.svg?)](https://www.ardu-badge.com/Functional-Vlpp)
+ 5. [`DoubleResetDetector_Generic library v1.0.3+`](https://github.com/khoih-prog/DoubleResetDetector_Generic). To install. check [![arduino-library-badge](https://www.ardu-badge.com/badge/DoubleResetDetector_Generic.svg?)](https://www.ardu-badge.com/DoubleResetDetector_Generic).
+ 6. For built-in LAN8742A Ethernet:
+   - [`STM32Ethernet library v1.2.0+`](https://github.com/stm32duino/STM32Ethernet) for built-in LAN8742A Ethernet on (Nucleo-144, Discovery). [![GitHub release](https://img.shields.io/github/release/stm32duino/STM32Ethernet.svg)](https://github.com/stm32duino/STM32Ethernet/releases/latest)
+   - [`LwIP library v2.1.2+`](https://github.com/stm32duino/LwIP) for built-in LAN8742A Ethernet on (Nucleo-144, Discovery). [![GitHub release](https://img.shields.io/github/release/stm32duino/LwIP.svg)](https://github.com/stm32duino/LwIP/releases/latest)
+ 7. For W5x00 Ethernet:
+   - [`Ethernet library v2.0.0+`](https://github.com/arduino-libraries/Ethernet) for W5100, W5200 and W5500.  [![GitHub release](https://img.shields.io/github/release/arduino-libraries/Ethernet.svg)](https://github.com/arduino-libraries/Ethernet/releases/latest)
    - [`EthernetLarge library v2.0.0+`](https://github.com/OPEnSLab-OSU/EthernetLarge) for W5100, W5200 and W5500.
-   - [`Ethernet2 library v1.0.4+`](https://github.com/adafruit/Ethernet2) for W5500.
-   - [`Ethernet3 library v1.5.3+`](https://github.com/sstaub/Ethernet3) for W5500/WIZ550io/WIZ850io/USR-ES1 with Wiznet W5500 chip.
-   - [`EthernetENC library v2.0.0+`](https://github.com/jandrassy/EthernetENC) for ENC28J60. **New and Better**
-   - [`UIPEthernet library v2.0.9+`](https://github.com/UIPEthernet/UIPEthernet) for ENC28J60.
- 6. [`LwIP library v2.1.2+`](https://github.com/stm32duino/LwIP) for built-in LAN8742A Ethernet on (Nucleo-144, Discovery)
-
-
+   - [`Ethernet2 library v1.0.4+`](https://github.com/khoih-prog/Ethernet2) for W5500. [![GitHub release](https://img.shields.io/github/release/adafruit/Ethernet2.svg)](https://github.com/adafruit/Ethernet2/releases/latest)
+   - [`Ethernet3 library v1.5.3+`](https://github.com/sstaub/Ethernet3) for W5500/WIZ550io/WIZ850io/USR-ES1 with Wiznet W5500 chip. [![GitHub release](https://img.shields.io/github/release/sstaub/Ethernet3.svg)](https://github.com/sstaub/Ethernet3/releases/latest)
+ 8. For ENC28J60 Ethernet:
+   - [`EthernetENC library v2.0.0+`](https://github.com/jandrassy/EthernetENC) for ENC28J60. [![GitHub release](https://img.shields.io/github/release/jandrassy/EthernetENC.svg)](https://github.com/jandrassy/EthernetENC/releases/latest). **New and Better**
+   - [`UIPEthernet library v2.0.9+`](https://github.com/UIPEthernet/UIPEthernet) for ENC28J60. [![GitHub release](https://img.shields.io/github/release/UIPEthernet/UIPEthernet.svg)](https://github.com/UIPEthernet/UIPEthernet/releases/latest)
+   
 ---
 
 ### Installation
@@ -454,17 +472,35 @@ Ethernet_Configuration defaultConfig;
 ```
 
 ---
+---
 
-### How to add dynamic parameters from sketch
+### How to use
 
-- To add custom parameters, just modify from the example below
+#### 1. Basic usage
+
+- Include in your sketch
+
+```cpp
+// Must be before #include <Ethernet_Manager.h>
+#include <Ethernet_Manager.h>
+
+Ethernet_Manager ethernet_manager;
+```
+
+#### 2. Add custom parameters
+
+- To add custom parameters, just add
 
 ```
-#define USE_DYNAMIC_PARAMETERS      true
+#ifndef dynamicParams_h
+#define dynamicParams_h
+
+#include "defines.h"
+
+// USE_DYNAMIC_PARAMETERS defined in defined.h
 
 /////////////// Start dynamic Credentials ///////////////
 
-//Defined in BlynkEthernet_WM.h, <BlynkEthernet_ESP8266_WM.h>, <BlynkEthernet_ESP32 or_WM.h>
 /**************************************
   #define MAX_ID_LEN                5
   #define MAX_DISPLAY_NAME_LEN      16
@@ -519,13 +555,51 @@ Ethernet_Configuration defaultConfig;
 
 /////// // End dynamic Credentials ///////////
 
+#endif      //dynamicParams_h
+
 ```
+
+#### 3. Not using custom parameters
+
 - If you don't need to add dynamic parameters, use the following in sketch
 
 ```
-#define USE_DYNAMIC_PARAMETERS     false
+#define USE_DYNAMIC_PARAMETERS      false
 ```
 
+#### 4. To open Config Portal
+
+- When you want to open a config portal, just add
+
+```cpp
+ethernet_manager.begin();
+```
+
+#### 5. To use custom HTML Style
+
+```
+const char NewCustomsStyle[] /*PROGMEM*/ = "<style>div,input{padding:5px;font-size:1em;}input{width:95%;}body{text-align: center;}\
+button{background-color:blue;color:white;line-height:2.4rem;font-size:1.2rem;width:100%;}fieldset{border-radius:0.3rem;margin:0px;}</style>";
+
+...
+
+ethernet_manager.setCustomsStyle(NewCustomsStyle);
+```
+
+#### 6. To use custom Head Elements
+
+
+```
+ethernet_manager.setCustomsHeadElement("<style>html{filter: invert(10%);}</style>");
+```
+
+#### 7. To use CORS Header
+
+```
+ethernet_manager.setCORSHeader("Your Access-Control-Allow-Origin");
+```
+
+---
 ---
 
 ### Important Notes for using Dynamic Parameters' ids
@@ -549,6 +623,7 @@ Please be noted that the following **reserved names are already used in library*
  3. [Ethernet_STM32](examples/Ethernet_STM32) 
  4. [MQTT_ThingStream_Ethernet_STM32](examples/MQTT_ThingStream_Ethernet_STM32)
 
+---
 ---
 
 ## So, how it works?
@@ -763,6 +838,11 @@ void check_status()
   }
 }
 
+#if USING_CUSTOMS_STYLE
+const char NewCustomsStyle[] /*PROGMEM*/ = "<style>div,input{padding:5px;font-size:1em;}input{width:95%;}body{text-align: center;}\
+button{background-color:blue;color:white;line-height:2.4rem;font-size:1.2rem;width:100%;}fieldset{border-radius:0.3rem;margin:0px;}</style>";
+#endif
+
 void setup()
 {
   // Debug console
@@ -864,7 +944,23 @@ void setup()
 #endif
   ET_LOGWARN(F("========================="));
  
+  //////////////////////////////////////////////
+  
+#if USING_CUSTOMS_STYLE
+  ethernet_manager.setCustomsStyle(NewCustomsStyle);
+#endif
+
+#if USING_CUSTOMS_HEAD_ELEMENT
+  ethernet_manager.setCustomsHeadElement("<style>html{filter: invert(10%);}</style>");
+#endif
+
+#if USING_CORS_FEATURE  
+  ethernet_manager.setCORSHeader("Your Access-Control-Allow-Origin");
+#endif
+
   ethernet_manager.begin();
+
+  //////////////////////////////////////////////
 
   localEthernetIP = Ethernet.localIP();
 
@@ -900,7 +996,7 @@ void displayCredentials()
 {
   Serial.println(F("\nYour stored Credentials :"));
 
-  for (int i = 0; i < NUM_MENU_ITEMS; i++)
+  for (uint16_t i = 0; i < NUM_MENU_ITEMS; i++)
   {
     Serial.print(myMenuItems[i].displayName);
     Serial.print(F(" = "));
@@ -914,7 +1010,7 @@ void displayCredentialsOnce()
 
   if (!displayedCredentials)
   {
-    for (int i = 0; i < NUM_MENU_ITEMS; i++)
+    for (uint16_t i = 0; i < NUM_MENU_ITEMS; i++)
     {
       if (!strlen(myMenuItems[i].pdata))
       {
@@ -943,6 +1039,10 @@ void loop()
 
   if (!inConfigMode)
   {
+#if (USE_DYNAMIC_PARAMETERS)
+    displayCredentialsOnce();
+#endif
+    
     if (!client)
     {
        client = new PubSubClient(MQTT_SERVER, atoi(MQTT_PORT), mqtt_receive_callback, ethClient);
@@ -979,10 +1079,6 @@ void loop()
     client->loop();
     
     check_status();
-  
-  #if (USE_DYNAMIC_PARAMETERS)
-    displayCredentialsOnce();
-  #endif
   }
 }
 ```
@@ -1088,6 +1184,20 @@ void loop()
 
 #define EEPROM_START   0
 
+/////////////////////////////////////////////
+
+// Add customs headers from v1.2.0
+#define USING_CUSTOMS_STYLE                 true
+#define USING_CUSTOMS_HEAD_ELEMENT          true
+#define USING_CORS_FEATURE                  true
+
+/////////////////////////////////////////////
+
+// Config Timeout 120s (default 60s)
+#define CONFIG_TIMEOUT                      120000L
+
+#define USE_DYNAMIC_PARAMETERS              true
+
 //////////////////////////////////////////
 
 #include <Ethernet_Manager_STM32.h>
@@ -1128,7 +1238,7 @@ typedef struct Configuration
 
 #if TO_LOAD_DEFAULT_CONFIG_DATA
 
-bool LOAD_DEFAULT_CONFIG_DATA = true;
+bool LOAD_DEFAULT_CONFIG_DATA = false;
 
 Ethernet_Configuration defaultConfig =
 {
@@ -1172,11 +1282,11 @@ Ethernet_Configuration defaultConfig;
 
 #include "defines.h"
 
-#define USE_DYNAMIC_PARAMETERS      true
+// USE_DYNAMIC_PARAMETERS defined in defined.h
 
 /////////////// Start dynamic Credentials ///////////////
 
-//Defined in BlynkEthernet_WM.h, <BlynkEthernet_ESP8266_WM.h>, <BlynkEthernet_ESP32 or_WM.h>
+//Defined in <Ethernet_Manager_STM32_Impl.h>
 /**************************************
   #define MAX_ID_LEN                5
   #define MAX_DISPLAY_NAME_LEN      16
@@ -1244,7 +1354,7 @@ This is the terminal output of an STM32F7 Nucleo-144 NUCLEO_F767ZI board with LA
 ```
 Start Ethernet_STM32 on NUCLEO_F767ZI
 Ethernet Shield type : LAN8742A Ethernet & STM32Ethernet Library
-Ethernet_Manager_STM32 v1.0.1
+Ethernet_Manager_STM32 v1.2.0
 DoubleResetDetector_Generic v1.0.3
 [ETM] ======= Start Default Config Data =======
 [ETM] Header=  , BoardName= 
@@ -1277,7 +1387,7 @@ H
 ```cpp
 Start Ethernet_STM32 on NUCLEO_F767ZI
 Ethernet Shield type : LAN8742A Ethernet & STM32Ethernet Library
-Ethernet_Manager_STM32 v1.0.1
+Ethernet_Manager_STM32 v1.2.0
 DoubleResetDetector_Generic v1.0.3
 [ETM] ======= Start Default Config Data =======
 [ETM] Header=  , BoardName= 
@@ -1314,7 +1424,7 @@ This is the terminal output of STM32F7 Nucleo-144 NUCLEO_F767ZI board with W5500
 ```
 Start Ethernet_STM32 on NUCLEO_F767ZI
 Ethernet Shield type : W5x00 using Ethernet Library
-Ethernet_Manager_STM32 v1.0.1
+Ethernet_Manager_STM32 v1.2.0
 DoubleResetDetector_Generic v1.0.3
 
 EEPROM size = 16384, start = 0
@@ -1339,7 +1449,7 @@ SetFlag write = 0xd0d01234
 ```
 Start Ethernet_STM32 on NUCLEO_F767ZI
 Ethernet Shield type : W5x00 using Ethernet Library
-Ethernet_Manager_STM32 v1.0.1
+Ethernet_Manager_STM32 v1.2.0
 DoubleResetDetector_Generic v1.0.3
 
 EEPROM size = 16384, start = 0
@@ -1384,7 +1494,7 @@ H
 ```
 Start Ethernet_STM32 on NUCLEO_F767ZI
 Ethernet Shield type : W5x00 using Ethernet Library
-Ethernet_Manager_STM32 v1.0.1
+Ethernet_Manager_STM32 v1.2.0
 DoubleResetDetector_Generic v1.0.3
 
 EEPROM size = 16384, start = 0
@@ -1432,7 +1542,7 @@ This is the terminal output of STM32F7 Nucleo-144 NUCLEO_F767ZI board with ENC28
 ```
 Start MQTT_ThingStream_Ethernet_STM32 on NUCLEO_F767ZI
 Ethernet Shield type : ENC28J60 using EthernetENC Library
-Ethernet_Manager_STM32 v1.0.1
+Ethernet_Manager_STM32 v1.2.0
 DoubleResetDetector_Generic v1.0.3
 
 EEPROM size = 16384, start = 0
@@ -1466,7 +1576,7 @@ ClearFlag write = 0xd0d04321
 ```
 Start MQTT_ThingStream_Ethernet_STM32 on NUCLEO_F767ZI
 Ethernet Shield type : ENC28J60 using EthernetENC Library
-Ethernet_Manager_STM32 v1.0.1
+Ethernet_Manager_STM32 v1.2.0
 DoubleResetDetector_Generic v1.0.3
 
 EEPROM size = 16384, start = 0
@@ -1519,7 +1629,7 @@ This is the terminal output of STM32F7 Nucleo-144 NUCLEO_F767ZI board with W5x00
 ```
 Start Ethernet_STM32 on NUCLEO_F767ZI
 Ethernet Shield type : W5x00 using EthernetLarge Library
-Ethernet_Manager_STM32 v1.0.1
+Ethernet_Manager_STM32 v1.2.0
 DoubleResetDetector_Generic v1.0.3
 
 EEPROM size = 16384, start = 0
@@ -1567,7 +1677,7 @@ This is the terminal output of STM32F7 Nucleo-144 NUCLEO_F767ZI board with LAN87
 ```
 Start MQTT_ThingStream_Ethernet_STM32 on NUCLEO_F767ZI
 Ethernet Shield type : LAN8742A Ethernet & STM32Ethernet Library
-Ethernet_Manager_STM32 v1.0.1
+Ethernet_Manager_STM32 v1.2.0
 DoubleResetDetector_Generic v1.0.3
 
 EEPROM size = 16384, start = 0
@@ -1601,7 +1711,7 @@ ClearFlag write = 0xd0d04321
 ```
 Start MQTT_ThingStream_Ethernet_STM32 on NUCLEO_F767ZI
 Ethernet Shield type : LAN8742A Ethernet & STM32Ethernet Library
-Ethernet_Manager_STM32 v1.0.1
+Ethernet_Manager_STM32 v1.2.0
 DoubleResetDetector_Generic v1.0.3
 
 EEPROM size = 16384, start = 0
@@ -1685,6 +1795,15 @@ Sometimes, the library will only work if you update the board core to the latest
 
 ## Releases
 
+### Major Releases v1.2.0
+
+1. Configurable **Customs HTML Headers**, including Customs Style, Customs Head Elements, CORS Header.
+2. Add functions to control Config Portal from software or Virtual Switches. Check [How to trigger a Config Portal from code #25](https://github.com/khoih-prog/Blynk_WM/issues/25)
+3. Use more efficient [**FlashStorage_STM32 v1.0.1**](https://github.com/khoih-prog/FlashStorage_STM32)
+4. Fix Config Portal Bug. 
+5. Update examples
+6. Bump up to version v1.2.0 to sync with [**Ethernet_Manager**](https://github.com/khoih-prog/Ethernet_Manager)
+
 ### Releases v1.0.1
 
 1. Clean-up all compiler warnings possible.
@@ -1763,7 +1882,8 @@ Submit issues to: [Ethernet_Manager_STM32 issues](https://github.com/khoih-prog/
 13. Configurable Config Portal Title
 14. Re-structure all examples to separate Credentials / Defines / Dynamic Params / Code so that you can change Credentials / Dynamic Params quickly for each device.
 15. Add support to new [**`EthernetENC library`**](https://github.com/jandrassy/EthernetENC) for ENC28J60.
-
+16. Add Table of Contents and Version String
+17. Configurable **Customs HTML Headers**, including Customs Style, Customs Head Elements, CORS Header
 
 ---
 

@@ -7,12 +7,13 @@
 
   Built by Khoi Hoang https://github.com/khoih-prog/Ethernet_Manager_STM32
   Licensed under MIT license
-  Version: 1.0.1
+  Version: 1.2.0
 
   Version  Modified By   Date      Comments
   -------  -----------  ---------- -----------
   1.0.0     K Hoang     16/12/2020 Initial coding.
   1.0.1     K Hoang     29/12/2020 Suppress all possible compiler warnings
+  1.2.0     K Hoang     23/02/2021 Optimize code and use better FlashStorage_STM32. Add customs HTML header feature. Fix bug.
  *****************************************************************************************************************************/
 
 #pragma once
@@ -37,28 +38,49 @@
   #define _ETHERNET_MANAGER_STM32_LOGLEVEL_       0
 #endif
 
-#define ETM_LOGERROR(x)         if(_ETHERNET_MANAGER_STM32_LOGLEVEL_>0) { ETM_DBG_PORT.print("[ETM] "); ETM_DBG_PORT.println(x); }
-#define ETM_LOGERROR0(x)        if(_ETHERNET_MANAGER_STM32_LOGLEVEL_>0) { ETM_DBG_PORT.print(x); }
-#define ETM_LOGERROR1(x,y)      if(_ETHERNET_MANAGER_STM32_LOGLEVEL_>0) { ETM_DBG_PORT.print("[ETM] "); ETM_DBG_PORT.print(x); ETM_DBG_PORT.print(" "); ETM_DBG_PORT.println(y); }
-#define ETM_LOGERROR2(x,y,z)    if(_ETHERNET_MANAGER_STM32_LOGLEVEL_>0) { ETM_DBG_PORT.print("[ETM] "); ETM_DBG_PORT.print(x); ETM_DBG_PORT.print(" "); ETM_DBG_PORT.print(y); ETM_DBG_PORT.print(" "); ETM_DBG_PORT.println(z); }
-#define ETM_LOGERROR3(x,y,z,w)  if(_ETHERNET_MANAGER_STM32_LOGLEVEL_>0) { ETM_DBG_PORT.print("[ETM] "); ETM_DBG_PORT.print(x); ETM_DBG_PORT.print(" "); ETM_DBG_PORT.print(y); ETM_DBG_PORT.print(" "); ETM_DBG_PORT.print(z); ETM_DBG_PORT.print(" "); ETM_DBG_PORT.println(w); }
+const char ETM_MARK[] = "[ETM] ";
 
-#define ETM_LOGWARN(x)          if(_ETHERNET_MANAGER_STM32_LOGLEVEL_>1) { ETM_DBG_PORT.print("[ETM] "); ETM_DBG_PORT.println(x); }
-#define ETM_LOGWARN0(x)         if(_ETHERNET_MANAGER_STM32_LOGLEVEL_>1) { ETM_DBG_PORT.print(x); }
-#define ETM_LOGWARN1(x,y)       if(_ETHERNET_MANAGER_STM32_LOGLEVEL_>1) { ETM_DBG_PORT.print("[ETM] "); ETM_DBG_PORT.print(x); ETM_DBG_PORT.print(" "); ETM_DBG_PORT.println(y); }
-#define ETM_LOGWARN2(x,y,z)     if(_ETHERNET_MANAGER_STM32_LOGLEVEL_>1) { ETM_DBG_PORT.print("[ETM] "); ETM_DBG_PORT.print(x); ETM_DBG_PORT.print(" "); ETM_DBG_PORT.print(y); ETM_DBG_PORT.print(" "); ETM_DBG_PORT.println(z); }
-#define ETM_LOGWARN3(x,y,z,w)   if(_ETHERNET_MANAGER_STM32_LOGLEVEL_>1) { ETM_DBG_PORT.print("[ETM] "); ETM_DBG_PORT.print(x); ETM_DBG_PORT.print(" "); ETM_DBG_PORT.print(y); ETM_DBG_PORT.print(" "); ETM_DBG_PORT.print(z); ETM_DBG_PORT.print(" "); ETM_DBG_PORT.println(w); }
+#define ETM_PRINT        ETM_DBG_PORT.print
+#define ETM_PRINTLN      ETM_DBG_PORT.println
 
-#define ETM_LOGINFO(x)          if(_ETHERNET_MANAGER_STM32_LOGLEVEL_>2) { ETM_DBG_PORT.print("[ETM] "); ETM_DBG_PORT.println(x); }
-#define ETM_LOGINFO0(x)         if(_ETHERNET_MANAGER_STM32_LOGLEVEL_>2) { ETM_DBG_PORT.print(x); }
-#define ETM_LOGINFO1(x,y)       if(_ETHERNET_MANAGER_STM32_LOGLEVEL_>2) { ETM_DBG_PORT.print("[ETM] "); ETM_DBG_PORT.print(x); ETM_DBG_PORT.print(" "); ETM_DBG_PORT.println(y); }
-#define ETM_LOGINFO2(x,y,z)     if(_ETHERNET_MANAGER_STM32_LOGLEVEL_>2) { ETM_DBG_PORT.print("[ETM] "); ETM_DBG_PORT.print(x); ETM_DBG_PORT.print(" "); ETM_DBG_PORT.print(y); ETM_DBG_PORT.print(" "); ETM_DBG_PORT.println(z); }
-#define ETM_LOGINFO3(x,y,z,w)   if(_ETHERNET_MANAGER_STM32_LOGLEVEL_>2) { ETM_DBG_PORT.print("[ETM] "); ETM_DBG_PORT.print(x); ETM_DBG_PORT.print(" "); ETM_DBG_PORT.print(y); ETM_DBG_PORT.print(" "); ETM_DBG_PORT.print(z); ETM_DBG_PORT.print(" "); ETM_DBG_PORT.println(w); }
+#define ETM_PRINT_MARK   ETM_PRINT(ETM_MARK)
 
-#define ETM_LOGDEBUG(x)         if(_ETHERNET_MANAGER_STM32_LOGLEVEL_>3) { ETM_DBG_PORT.print("[ETM] "); ETM_DBG_PORT.println(x); }
-#define ETM_LOGDEBUG0(x)        if(_ETHERNET_MANAGER_STM32_LOGLEVEL_>3) { ETM_DBG_PORT.print(x); }
-#define ETM_LOGDEBUG1(x,y)      if(_ETHERNET_MANAGER_STM32_LOGLEVEL_>3) { ETM_DBG_PORT.print("[ETM] "); ETM_DBG_PORT.print(x); ETM_DBG_PORT.print(" "); ETM_DBG_PORT.println(y); }
-#define ETM_LOGDEBUG2(x,y,z)    if(_ETHERNET_MANAGER_STM32_LOGLEVEL_>3) { ETM_DBG_PORT.print("[ETM] "); ETM_DBG_PORT.print(x); ETM_DBG_PORT.print(" "); ETM_DBG_PORT.print(y); ETM_DBG_PORT.print(" "); ETM_DBG_PORT.println(z); }
-#define ETM_LOGDEBUG3(x,y,z,w)  if(_ETHERNET_MANAGER_STM32_LOGLEVEL_>3) { ETM_DBG_PORT.print("[ETM] "); ETM_DBG_PORT.print(x); ETM_DBG_PORT.print(" "); ETM_DBG_PORT.print(y); ETM_DBG_PORT.print(" "); ETM_DBG_PORT.print(z); ETM_DBG_PORT.print(" "); ETM_DBG_PORT.println(w); }
+////////////////////////////////////////////////////
+
+#define ETM_LOGERROR0(x)        if(_ETHERNET_MANAGER_STM32_LOGLEVEL_>0) { ETM_PRINT(x); }
+#define ETM_LOGERROR(x)         if(_ETHERNET_MANAGER_STM32_LOGLEVEL_>0) { ETM_PRINT_MARK; ETM_PRINTLN(x); }
+#define ETM_LOGERROR1(x,y)      if(_ETHERNET_MANAGER_STM32_LOGLEVEL_>0) { ETM_PRINT_MARK; ETM_PRINT(x); ETM_PRINTLN(y); }
+#define ETM_LOGERROR2(x,y,z)    if(_ETHERNET_MANAGER_STM32_LOGLEVEL_>0) { ETM_PRINT_MARK; ETM_PRINT(x); ETM_PRINT(y); ETM_PRINTLN(z); }
+#define ETM_LOGERROR3(x,y,z,w)  if(_ETHERNET_MANAGER_STM32_LOGLEVEL_>0) { ETM_PRINT_MARK; ETM_PRINT(x); ETM_PRINT(y); ETM_PRINT(z); ETM_PRINTLN(w); }
+#define ETM_LOGERROR5(x,y,z,w,xx,yy) if(_ETHERNET_MANAGER_STM32_LOGLEVEL_>0) { ETM_PRINT_MARK; ETM_PRINT(x); ETM_PRINT(y); ETM_PRINT(z); ETM_PRINT(w); ETM_PRINT(xx); ETM_PRINTLN(yy); }
+
+////////////////////////////////////////////////////
+
+#define ETM_LOGWARN0(x)         if(_ETHERNET_MANAGER_STM32_LOGLEVEL_>1) { ETM_PRINT(x); }
+#define ETM_LOGWARN(x)          if(_ETHERNET_MANAGER_STM32_LOGLEVEL_>1) { ETM_PRINT_MARK; ETM_PRINTLN(x); }
+#define ETM_LOGWARN1(x,y)       if(_ETHERNET_MANAGER_STM32_LOGLEVEL_>1) { ETM_PRINT_MARK; ETM_PRINT(x); ETM_PRINTLN(y); }
+#define ETM_LOGWARN2(x,y,z)     if(_ETHERNET_MANAGER_STM32_LOGLEVEL_>1) { ETM_PRINT_MARK; ETM_PRINT(x); ETM_PRINT(y); ETM_PRINTLN(z); }
+#define ETM_LOGWARN3(x,y,z,w)   if(_ETHERNET_MANAGER_STM32_LOGLEVEL_>1) { ETM_PRINT_MARK; ETM_PRINT(x); ETM_PRINT(y); ETM_PRINT(z); ETM_PRINTLN(w); }
+#define ETM_LOGWARN5(x,y,z,w,xx,yy) if(_ETHERNET_MANAGER_STM32_LOGLEVEL_>1) { ETM_PRINT_MARK; ETM_PRINT(x); ETM_PRINT(y); ETM_PRINT(z); ETM_PRINT(w); ETM_PRINT(xx); ETM_PRINTLN(yy); }
+
+////////////////////////////////////////////////////
+
+#define ETM_LOGINFO0(x)         if(_ETHERNET_MANAGER_STM32_LOGLEVEL_>2) { ETM_PRINT(x); }
+#define ETM_LOGINFO(x)          if(_ETHERNET_MANAGER_STM32_LOGLEVEL_>2) { ETM_PRINT_MARK; ETM_PRINTLN(x); }
+#define ETM_LOGINFO1(x,y)       if(_ETHERNET_MANAGER_STM32_LOGLEVEL_>2) { ETM_PRINT_MARK; ETM_PRINT(x); ETM_PRINTLN(y); }
+#define ETM_LOGINFO2(x,y,z)     if(_ETHERNET_MANAGER_STM32_LOGLEVEL_>2) { ETM_PRINT_MARK; ETM_PRINT(x); ETM_PRINT(y); ETM_PRINTLN(z); }
+#define ETM_LOGINFO3(x,y,z,w)   if(_ETHERNET_MANAGER_STM32_LOGLEVEL_>2) { ETM_PRINT_MARK; ETM_PRINT(x); ETM_PRINT(y); ETM_PRINT(z); ETM_PRINTLN(w); }
+#define ETM_LOGINFO5(x,y,z,w,xx,yy) if(_ETHERNET_MANAGER_STM32_LOGLEVEL_>2) { ETM_PRINT_MARK; ETM_PRINT(x); ETM_PRINT(y); ETM_PRINT(z); ETM_PRINT(w); ETM_PRINT(xx); ETM_PRINTLN(yy); }
+
+////////////////////////////////////////////////////
+
+#define ETM_LOGDEBUG0(x)        if(_ETHERNET_MANAGER_STM32_LOGLEVEL_>3) { ETM_PRINT(x); }
+#define ETM_LOGDEBUG(x)         if(_ETHERNET_MANAGER_STM32_LOGLEVEL_>3) { ETM_PRINT_MARK; ETM_PRINTLN(x); }
+#define ETM_LOGDEBUG1(x,y)      if(_ETHERNET_MANAGER_STM32_LOGLEVEL_>3) { ETM_PRINT_MARK; ETM_PRINT(x); ETM_PRINTLN(y); }
+#define ETM_LOGDEBUG2(x,y,z)    if(_ETHERNET_MANAGER_STM32_LOGLEVEL_>3) { ETM_PRINT_MARK; ETM_PRINT(x); ETM_PRINT(y); ETM_PRINTLN(z); }
+#define ETM_LOGDEBUG3(x,y,z,w)  if(_ETHERNET_MANAGER_STM32_LOGLEVEL_>3) { ETM_PRINT_MARK; ETM_PRINT(x); ETM_PRINT(y); ETM_PRINT(z); ETM_PRINTLN(w); }
+#define ETM_LOGDEBUG5(x,y,z,w,xx,yy) if(_ETHERNET_MANAGER_STM32_LOGLEVEL_>3) { ETM_PRINT_MARK; ETM_PRINT(x); ETM_PRINT(y); ETM_PRINT(z); ETM_PRINT(w); ETM_PRINT(xx); ETM_PRINTLN(yy); }
+
+////////////////////////////////////////////////////
 
 #endif    //Ethernet_Manager_STM32_Debug

@@ -7,12 +7,13 @@
 
   Built by Khoi Hoang https://github.com/khoih-prog/Ethernet_Manager_STM32
   Licensed under MIT license
-  Version: 1.0.1
+  Version: 1.2.0
 
   Version  Modified By   Date      Comments
   -------  -----------  ---------- -----------
   1.0.0     K Hoang     16/12/2020 Initial coding.
   1.0.1     K Hoang     29/12/2020 Suppress all possible compiler warnings
+  1.2.0     K Hoang     23/02/2021 Optimize code and use better FlashStorage_STM32. Add customs HTML header feature. Fix bug.
  *****************************************************************************************************************************/
 
 #pragma once
@@ -20,7 +21,7 @@
 #ifndef Ethernet_Manager_STM32
 #define Ethernet_Manager_STM32
 
-#define ETHERNET_MANAGER_STM32_VERSION      "Ethernet_Manager_STM32 v1.0.1"
+#define ETHERNET_MANAGER_STM32_VERSION      "Ethernet_Manager_STM32 v1.2.0"
 
 #if ( defined(STM32F0) || defined(STM32F1) || defined(STM32F2) || defined(STM32F3)  ||defined(STM32F4) || defined(STM32F7) || \
        defined(STM32L0) || defined(STM32L1) || defined(STM32L4) || defined(STM32H7)  ||defined(STM32G0) || defined(STM32G4) || \
