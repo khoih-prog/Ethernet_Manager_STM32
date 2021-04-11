@@ -12,16 +12,16 @@
 #ifndef defines_h
 #define defines_h
 
-#if ( defined(STM32F0) || defined(STM32F1) || defined(STM32F2) || defined(STM32F3)  ||defined(STM32F4) || defined(STM32F7) || \
-       defined(STM32L0) || defined(STM32L1) || defined(STM32L4) || defined(STM32H7)  ||defined(STM32G0) || defined(STM32G4) || \
-       defined(STM32WB) || defined(STM32MP1) )
+#if ( defined(ARDUINO_BLACK_F407VE) || defined(ARDUINO_BLACK_F407VG) || defined(ARDUINO_BLACK_F407ZE) || defined(ARDUINO_BLACK_F407ZG)  || \
+      defined(ARDUINO_BLUE_F407VE_Mini) || defined(ARDUINO_DIYMORE_F407VGT) || defined(ARDUINO_FK407M1) || defined(ARDUINO_NUCLEO_F429ZI) || \
+      defined(ARDUINO_DISCO_F746NG) || defined(ARDUINO_NUCLEO_F746ZG) || defined(ARDUINO_NUCLEO_F756ZG) || defined(ARDUINO_NUCLEO_H743ZI) )
   #if defined(ETHERNET_USE_STM32)
     #undef ETHERNET_USE_STM32
   #endif
   #define ETHERNET_USE_STM32         true
   #define USE_DYNAMIC_PARAMETERS      true
 #else
-  #error This code is designed to run on STM32F/L/H/G/WB/MP1 platform! Please check your Tools->Board setting.  
+  #error This code is designed to run on some STM32F407XX NUCLEO-F429ZI, STM32F746 and STM32F756 platform! Please check your Tools->Board setting.
 #endif
 
 // To suppress boolean warnings of old libraries
@@ -42,12 +42,14 @@
 // Default pin 10 to SS/CS. To change according to your board, if necessary
 #define USE_THIS_SS_PIN       10
 
+#define USING_LAN8720         true
+
 // Only one if the following to be true
-#define USE_BUILTIN_ETHERNET  false
+#define USE_BUILTIN_ETHERNET  true
 #define USE_ETHERNET          false
 #define USE_ETHERNET2         false
 #define USE_ETHERNET3         false
-#define USE_ETHERNET_LARGE    true
+#define USE_ETHERNET_LARGE    false
 #define USE_ETHERNET_ENC      false
 #define USE_UIP_ETHERNET      false
 #define USE_CUSTOM_ETHERNET   false
@@ -126,12 +128,12 @@
 #include <Ethernet_Manager_STM32.h>
 
 #ifndef SHIELD_TYPE
-#define SHIELD_TYPE     "Unknown Ethernet shield/library"
+  #define SHIELD_TYPE     "LAN8720 Ethernet" 
 #endif
 
 #define W5100_CS        10
 #define SDCARD_CS       4
 
-#define ETHERNET_HOST_NAME   "STM32-Ethernet"
+#define ETHERNET_HOST_NAME   "STM32-LAN8720"
 
 #endif      //defines_h

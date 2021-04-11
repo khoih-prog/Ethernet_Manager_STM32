@@ -16,7 +16,9 @@
   * [Features](#features)
   * [Currently supported Boards](#currently-supported-boards)
   * [Currently supported Ethernet shields/modules](#currently-supported-ethernet-shieldsmodules)
+  * [Not supported boards](#not-supported-boards)
 * [Changelog](#changelog)
+  * [Releases v1.3.0](#releases-v130)
   * [Major Releases v1.2.0](#major-releases-v120)
   * [Releases v1.0.1](#releases-v101)
   * [Releases v1.0.0](#releases-v100)
@@ -26,7 +28,8 @@
   * [Manual Install](#manual-install)
   * [VS Code & PlatformIO](#vs-code--platformio)
 * [Packages' Patches](#packages-patches)
-  * [1. For STM32 boards](#1-for-stm32-boards) 
+  * [1. For STM32 boards to use LAN8720](#1-for-stm32-boards-to-use-lan8720)
+  * [2. For STM32 boards to use Serial1](#2-for-stm32-boards-to-use-serial1) 
 * [Libraries' Patches](#libraries-patches)
   * [1. For application requiring 2K+ HTML page](#1-for-application-requiring-2k-html-page)
   * [2. For Ethernet library](#2-for-ethernet-library)
@@ -36,9 +39,15 @@
   * [6. For UIPEthernet library](#6-for-uipethernet-library)
 * [Configuration Notes](#configuration-notes)
   * [1. How to select which built-in Ethernet or shield to use](#1-how-to-select-which-built-in-ethernet-or-shield-to-use)
+    * [Select **one and only one** Ethernet library to use as follows:](#select-one-and-only-one-ethernet-library-to-use-as-follows)
+    * [To use built-in LAN8742A](#to-use-built-in-lan8742a)
+    * [To use LAN8720](#to-use-lan8720)
+    * [To use W5x00 Ethernet, for example using EthernetLarge library](#to-use-w5x00-ethernet-for-example-using-ethernetlarge-library)
+    * [To use ENC28J60 Ethernet, using EthernetENC library (**NEW and Better**)](#to-use-enc28j60-ethernet-using-ethernetenc-library-new-and-better)
+    * [To use ENC28J60 Ethernet, using UIPEthernet library](#to-use-enc28j60-ethernet-using-uipethernet-library)
+  * [Important](#important)
   * [2. How to select another CS/SS pin to use](#2-how-to-select-another-csss-pin-to-use)
   * [3. How to increase W5x00 TX/RX buffer](#3-how-to-increase-w5x00-txrx-buffer)
-  * [Not supported Libraries](#not-supported-libraries)
 * [How to use default Credentials and have them pre-loaded onto Config Portal](#how-to-use-default-credentials-and-have-them-pre-loaded-onto-config-portal)
 * [How to use](#how-to-use)
   * [1. Basic usage](#1-basic-usage)
@@ -49,11 +58,19 @@
   * [6. To use custom Head Elements](#6-to-use-custom-head-elements)
   * [7. To use CORS Header](#7-to-use-cors-header)
 * [Important Notes for using Dynamic Parameters' ids](#important-notes-for-using-dynamic-parameters-ids)
+* [HOWTO use STM32F4 with LAN8720](#howto-use-stm32f4-with-lan8720)
+  * [1. Wiring](#1-wiring)
+  * [2. HOWTO program using STLink V-2 or V-3](#2-howto-program-using-stlink-v-2-or-v-3)
+  * [3. HOWTO use Serial Port for Debugging](#3-howto-use-serial-port-for-debugging)
 * [Examples](#examples)
   * [ 1. AM2315_Ethernet_STM32](examples/AM2315_Ethernet_STM32)
   * [ 2. DHT11_Ethernet_STM32](examples/DHT11_Ethernet_STM32)
   * [ 3. Ethernet_STM32](examples/Ethernet_STM32)
   * [ 4. MQTT_ThingStream_Ethernet_STM32](examples/MQTT_ThingStream_Ethernet_STM32)
+  * [ 5. AM2315_Ethernet_STM32_LAN8720](examples/AM2315_Ethernet_STM32_LAN8720)
+  * [ 6. DHT11_Ethernet_STM32_LAN8720](examples/DHT11_Ethernet_STM32_LAN8720)
+  * [ 7. Ethernet_STM32_LAN8720](examples/Ethernet_STM32_LAN8720)
+  * [ 8. MQTT_ThingStream_Ethernet_STM32_LAN8720](examples/MQTT_ThingStream_Ethernet_STM32_LAN8720)
 * [So, how it works?](#so-how-it-works)
 * [Example MQTT_ThingStream_Ethernet_STM32](#example-mqtt_thingstream_ethernet_stm32)
   * [1. File MQTT_ThingStream_Ethernet_STM32.ino](#1-file-mqtt_thingstream_ethernet_stm32ino)
@@ -75,7 +92,10 @@
     * [4.1 Normal run](#41-normal-run)
   * [5. MQTT_ThingStream_Ethernet_STM32 on STM32F7 NUCLEO_F767ZI with LAN8742A Ethernet using STM32Ethernet Library](#5-mqtt_thingstream_ethernet_stm32-on-stm32f7-nucleo_f767zi-with-lan8742a-ethernet-using-stm32ethernet-library)
     * [5.1. Normal run without correct ThingStream MQTT Credentials](#51-normal-run-without-correct-thingstream-mqtt-credentials)
-    * [5.2. Got correct ThingStream MQTT Credentials from Config Portal](#52-got-correct-thingstream-mqtt-credentials-from-config-portal) 
+    * [5.2. Got correct ThingStream MQTT Credentials from Config Portal](#52-got-correct-thingstream-mqtt-credentials-from-config-portal)
+  * [6. MQTT_ThingStream_Ethernet_STM32_LAN8720 on STM32F4 BLACK_F407VE with LAN8720 Ethernet using STM32Ethernet Library](#6-mqtt_thingstream_ethernet_stm32_lan8720-on-stm32f4-black_f407ve-with-lan8742a-ethernet-using-stm32ethernet-library)
+    * [6.1. Normal run without correct ThingStream MQTT Credentials](#61-normal-run-without-correct-thingstream-mqtt-credentials)
+    * [6.2. Got correct ThingStream MQTT Credentials from Config Portal](#62-got-correct-thingstream-mqtt-credentials-from-config-portal) 
 * [Debug](#debug)
 * [Troubleshooting](#troubleshooting)
 * [Releases](#releases)
@@ -94,7 +114,7 @@
 
 #### Features
 
-- This is the new library, adding to the current WiFiManager/Ethernet_Manager sets of libraries. It's designed to help you eliminate `hardcoding` your Credentials in **STM32F/L/H/G/WB/MP1 boards using Ethernet shields (W5100, W5200, W5500, ENC28J60, built-in LAN8742A Ethernet)**. It's currently **not supporting SSL**. Will support soon.
+- This is the new library, adding to the current WiFiManager/Ethernet_Manager sets of libraries. It's designed to help you eliminate `hardcoding` your Credentials in **STM32F/L/H/G/WB/MP1 boards using Ethernet shields (W5100, W5200, W5500, ENC28J60, LAN8720, built-in LAN8742A Ethernet)**. It's currently **not supporting SSL**. Will support soon.
 - You can update Credentials any time you need to change via Configure Portal. Data are saved in configurable locations in EEPROM.
 - **DoubleDetectDetector** feature to force Config Portal when double reset is detected within predetermined time, default 10s.
 - Configurable **Config Portal Title** to be either BoardName or default undistinguishable names.
@@ -132,6 +152,12 @@ New recent features:
 - 3-D printer boards
 - Generic Flight Controllers
 - Midatronics boards
+
+3. **STM32 boards using Ethernet LAN8720** such as :
+
+  - **Nucleo-144 (F429ZI, NUCLEO_F746NG, NUCLEO_F746ZG, NUCLEO_F756ZG)**
+  - **Discovery (DISCO_F746NG)**
+  - **STM32F4 boards (BLACK_F407VE, BLACK_F407VG, BLACK_F407ZE, BLACK_F407ZG, BLACK_F407VE_Mini, DIYMORE_F407VGT, FK407M1)**
  
  ---
  
@@ -140,12 +166,29 @@ New recent features:
 1. Built-in Ethernet LAN8742A using [`STM32Ethernet library`](https://github.com/stm32duino/STM32Ethernet)
 2. W5x00 using [`Ethernet`](https://www.arduino.cc/en/Reference/Ethernet), [`EthernetLarge`](https://github.com/OPEnSLab-OSU/EthernetLarge), [`Ethernet2`](https://github.com/adafruit/Ethernet2) or [`Ethernet3`](https://github.com/sstaub/Ethernet3) library
 3. ENC28J60 using [`EthernetENC`](https://github.com/jandrassy/EthernetENC) or [`UIPEthernet`](https://github.com/UIPEthernet/UIPEthernet) library
+4. LAN8720 using [`STM32Ethernet`](https://github.com/stm32duino/STM32Ethernet) and [`LwIP`](https://github.com/stm32duino/LwIP) libraries.
 
+#### Not supported boards
+
+These boards are not supported:
+
+- Some Nucleo-32 (small Flash/memory)
+- Eval (no Serial, just need to redefine in sketch, library and UIPEthernet)
+- Generic STM32F0 (small Flash/memory)
+- Generic STM32F1 (with 64-K Flash): C6
+- Generic STM32F3 : no HardwareSPI.h
+- Electronics Speed Controllers (small Flash/memory)
 
 ---
 ---
 
 ## Changelog
+
+### Releases v1.3.0
+
+1. Add support to **LAN8720** Ethernet for many **STM32F4** (F407xx, NUCLEO_F429ZI) and **STM32F7** (DISCO_F746NG, NUCLEO_F746ZG, NUCLEO_F756ZG) boards.
+2. Add LAN8720 examples
+3. Add Packages' Patches for STM32 to use LAN8720 with STM32Ethernet and LwIP libraries
 
 ### Major Releases v1.2.0
 
@@ -174,10 +217,10 @@ New recent features:
 
  1. [`Arduino IDE 1.8.13+` for Arduino](https://www.arduino.cc/en/Main/Software)
  2. [`Arduino Core for STM32 v1.9.0+`](https://github.com/stm32duino/Arduino_Core_STM32) for STM32 boards. [![GitHub release](https://img.shields.io/github/release/stm32duino/Arduino_Core_STM32.svg)](https://github.com/stm32duino/Arduino_Core_STM32/releases/latest)
- 3. [`EthernetWebServer_STM32 library v1.1.1+`](https://github.com/khoih-prog/EthernetWebServer_STM32). To install. check [![arduino-library-badge](https://www.ardu-badge.com/badge/EthernetWebServer_STM32.svg?)](https://www.ardu-badge.com/EthernetWebServer_STM32)
+ 3. [`EthernetWebServer_STM32 library v1.2.0+`](https://github.com/khoih-prog/EthernetWebServer_STM32). To install. check [![arduino-library-badge](https://www.ardu-badge.com/badge/EthernetWebServer_STM32.svg?)](https://www.ardu-badge.com/EthernetWebServer_STM32)
  4. [`Functional-VLPP library v1.0.2+`](https://github.com/khoih-prog/functional-vlpp) to use server's lambda function. To install. check [![arduino-library-badge](https://www.ardu-badge.com/badge/Functional-Vlpp.svg?)](https://www.ardu-badge.com/Functional-Vlpp)
  5. [`DoubleResetDetector_Generic library v1.0.3+`](https://github.com/khoih-prog/DoubleResetDetector_Generic). To install. check [![arduino-library-badge](https://www.ardu-badge.com/badge/DoubleResetDetector_Generic.svg?)](https://www.ardu-badge.com/DoubleResetDetector_Generic).
- 6. For built-in LAN8742A Ethernet:
+ 6. For LAN8720 or built-in LAN8742A Ethernet:
    - [`STM32Ethernet library v1.2.0+`](https://github.com/stm32duino/STM32Ethernet) for built-in LAN8742A Ethernet on (Nucleo-144, Discovery). [![GitHub release](https://img.shields.io/github/release/stm32duino/STM32Ethernet.svg)](https://github.com/stm32duino/STM32Ethernet/releases/latest)
    - [`LwIP library v2.1.2+`](https://github.com/stm32duino/LwIP) for built-in LAN8742A Ethernet on (Nucleo-144, Discovery). [![GitHub release](https://img.shields.io/github/release/stm32duino/LwIP.svg)](https://github.com/stm32duino/LwIP/releases/latest)
  7. For W5x00 Ethernet:
@@ -219,7 +262,29 @@ The best way is to use `Arduino Library Manager`. Search for `Ethernet_Manager_S
 
 ### Packages' Patches
 
-#### 1. For STM32 boards
+#### 1. For STM32 boards to use LAN8720
+
+To use LAN8720 on some STM32 boards 
+
+- **Nucleo-144 (F429ZI, NUCLEO_F746NG, NUCLEO_F746ZG, NUCLEO_F756ZG)**
+- **Discovery (DISCO_F746NG)**
+- **STM32F4 boards (BLACK_F407VE, BLACK_F407VG, BLACK_F407ZE, BLACK_F407ZG, BLACK_F407VE_Mini, DIYMORE_F407VGT, FK407M1)**
+
+you have to copy the files [stm32f4xx_hal_conf_default.h](Packages_Patches/STM32/hardware/stm32/1.9.0/system/STM32F4xx) and [stm32f7xx_hal_conf_default.h](Packages_Patches/STM32/hardware/stm32/1.9.0/system/STM32F7xx) into STM32 stm32 directory (~/.arduino15/packages/STM32/hardware/stm32/1.9.0/system) to overwrite the old files.
+
+Supposing the STM32 stm32 core version is 1.9.0. These files must be copied into the directory:
+
+- `~/.arduino15/packages/STM32/hardware/stm32/1.9.0/system/STM32F4xx/stm32f4xx_hal_conf_default.h` for STM32F4.
+- `~/.arduino15/packages/STM32/hardware/stm32/1.9.0/system/STM32F7xx/stm32f7xx_hal_conf_default.h` for Nucleo-144 STM32F7.
+
+Whenever a new version is installed, remember to copy this file into the new version directory. For example, new version is x.yy.zz,
+theses files must be copied into the corresponding directory:
+
+- `~/.arduino15/packages/STM32/hardware/stm32/x.yy.zz/system/STM32F4xx/stm32f4xx_hal_conf_default.h`
+- `~/.arduino15/packages/STM32/hardware/stm32/x.yy.zz/system/STM32F7xx/stm32f7xx_hal_conf_default.h
+
+
+#### 2. For STM32 boards to use Serial1
 
 **To use Serial1 on some STM32 boards without Serial1 definition (Nucleo-144 NUCLEO_F767ZI, Nucleo-64 NUCLEO_L053R8, etc.) boards**, you have to copy the files [STM32 variant.h](Packages_Patches/STM32/hardware/stm32/1.9.0) into STM32 stm32 directory (~/.arduino15/packages/STM32/hardware/stm32/1.9.0). You have to modify the files corresponding to your boards, this is just an illustration how to do.
 
@@ -233,7 +298,6 @@ theses files must be copied into the corresponding directory:
 
 - `~/.arduino15/packages/STM32/hardware/stm32/x.yy.zz/variants/NUCLEO_F767ZI/variant.h`
 - `~/.arduino15/packages/STM32/hardware/stm32/x.yy.zz/variants/NUCLEO_L053R8/variant.h`
-
 
 ---
 
@@ -293,77 +357,186 @@ To add UDP Multicast support, necessary for the [**UPnP_Generic library**](https
 ---
 ---
 
-### Configuration Notes
+## Configuration Notes
 
-#### 1. How to select which built-in Ethernet or shield to use
+### 1. How to select which built-in Ethernet or shield to use
 
-The easiest way is to use 
+#### Select **one and only one** Ethernet library to use as follows:
 
-```
-#define USE_ETHERNET_WRAPPER    true
-```
+- Standard W5x00 Ethernet library 
 
-then select **one and only one** Ethernet library to use as follows:
+Standard W5x00 using Ethernet library is used by default, in the sketch, just be sure to comment out or leave these #defines to be false :
 
-- Standard STM32Ethernet library for built-in LAN8742A Ethernet is used by default, in the sketch, just be sure to comment out or leave these #defines to be false :
+```cpp
+#define USE_BUILTIN_ETHERNET    false
+#define USE_UIP_ETHERNET        false
 
-```
-// Only one if the following to be true
-#define USE_BUILTIN_ETHERNET  true
-#define USE_ETHERNET          false
-#define USE_ETHERNET2         false
-#define USE_ETHERNET3         false
-#define USE_ETHERNET_LARGE    false
-#define USE_ETHERNET_ENC      false
-#define USE_UIP_ETHERNET      false
-#define USE_CUSTOM_ETHERNET   false
-```
-
-- To use EthernetENC library for ENC28J60:
-
-```
-// Only one if the following to be true
-#define USE_BUILTIN_ETHERNET  false
-#define USE_ETHERNET          false
-#define USE_ETHERNET2         false
-#define USE_ETHERNET3         false
-#define USE_ETHERNET_LARGE    false
-#define USE_ETHERNET_ENC      true
-#define USE_UIP_ETHERNET      false
-#define USE_CUSTOM_ETHERNET   false
+#if !(USE_BUILTIN_ETHERNET || USE_UIP_ETHERNET)
+  // Only one of the following to be true
+  #define USE_ETHERNET          false
+  #define USE_ETHERNET2         false
+  #define USE_ETHERNET3         false
+  #define USE_ETHERNET_LARGE    false
+  #define USE_ETHERNET_ESP8266  false
+  #define USE_ETHERNET_ENC      false
+  #define USE_CUSTOM_ETHERNET   false
+#endif
 ```
 
-- To use any of the Ethernet libraries, such as EThernet, Ethernet2, Ethernet3, EthernetLarge:
+#### To use built-in LAN8742A
 
 ```
-// Only one if the following to be true
-#define USE_BUILTIN_ETHERNET  false
-#define USE_ETHERNET          false
-#define USE_ETHERNET2         false
-#define USE_ETHERNET3         true
-#define USE_ETHERNET_LARGE    false
-#define USE_ETHERNET_ENC      false
-#define USE_UIP_ETHERNET      false
-#define USE_CUSTOM_ETHERNET   false
+#define USE_BUILTIN_ETHERNET    true
+#define USE_UIP_ETHERNET        false
+
+#if !(USE_BUILTIN_ETHERNET || USE_UIP_ETHERNET)
+  // Only one of the following to be true
+  #define USE_ETHERNET          false
+  #define USE_ETHERNET2         false
+  #define USE_ETHERNET3         false
+  #define USE_ETHERNET_LARGE    false
+  #define USE_ETHERNET_ESP8266  false
+  #define USE_ETHERNET_ENC      false
+  #define USE_CUSTOM_ETHERNET   false
+#endif
+```
+
+#### To use LAN8720
+
+```
+#define USING_LAN8720           true
+#define USE_BUILTIN_ETHERNET    true
+#define USE_UIP_ETHERNET        false
+
+#if !(USE_BUILTIN_ETHERNET || USE_UIP_ETHERNET)
+  // Only one of the following to be true
+  #define USE_ETHERNET          false
+  #define USE_ETHERNET2         false
+  #define USE_ETHERNET3         false
+  #define USE_ETHERNET_LARGE    false
+  #define USE_ETHERNET_ESP8266  false
+  #define USE_ETHERNET_ENC      false
+  #define USE_CUSTOM_ETHERNET   false
+#endif
+```
+
+#### To use W5x00 Ethernet, for example using EthernetLarge library
+
+```cpp
+#define USE_BUILTIN_ETHERNET    false
+#define USE_UIP_ETHERNET        false
+
+#if !(USE_BUILTIN_ETHERNET || USE_UIP_ETHERNET)
+  // Only one of the following to be true
+  #define USE_ETHERNET          false
+  #define USE_ETHERNET2         false
+  #define USE_ETHERNET3         false
+  #define USE_ETHERNET_LARGE    true
+  #define USE_ETHERNET_ESP8266  false
+  #define USE_ETHERNET_ENC      false
+  #define USE_CUSTOM_ETHERNET   false
+#endif
+```
+
+#### To use ENC28J60 Ethernet, using EthernetENC library (**NEW and Better**)
+
+```cpp
+#define USE_BUILTIN_ETHERNET    false
+#define USE_UIP_ETHERNET        false
+
+#if !(USE_BUILTIN_ETHERNET || USE_UIP_ETHERNET)
+  // Only one of the following to be true
+  #define USE_ETHERNET          false
+  #define USE_ETHERNET2         false
+  #define USE_ETHERNET3         false
+  #define USE_ETHERNET_LARGE    false
+  #define USE_ETHERNET_ESP8266  false
+  #define USE_ETHERNET_ENC      true
+  #define USE_CUSTOM_ETHERNET   false
+#endif
+```
+
+#### To use ENC28J60 Ethernet, using UIPEthernet library
+
+```cpp
+#define USE_BUILTIN_ETHERNET    false
+#define USE_UIP_ETHERNET        true
+
+#if !(USE_BUILTIN_ETHERNET || USE_UIP_ETHERNET)
+  // Only one of the following to be true
+  #define USE_ETHERNET          false
+  #define USE_ETHERNET2         false
+  #define USE_ETHERNET3         false
+  #define USE_ETHERNET_LARGE    false
+  #define USE_ETHERNET_ESP8266  false
+  #define USE_ETHERNET_ENC      false
+  #define USE_CUSTOM_ETHERNET   false
+#endif
+```
+
+- To use any of the Ethernet libraries, such as Ethernet2, Ethernet3, EthernetLarge, EthernetENC:
+
+```cpp
+#define USE_BUILTIN_ETHERNET    false
+#define USE_UIP_ETHERNET        false
+
+#if !(USE_BUILTIN_ETHERNET || USE_UIP_ETHERNET)
+  // Only one of the following to be true
+  #define USE_ETHERNET          false
+  #define USE_ETHERNET2         true
+  #define USE_ETHERNET3         false
+  #define USE_ETHERNET_LARGE    false
+  #define USE_ETHERNET_ESP8266  false
+  #define USE_ETHERNET_ENC      false
+  #define USE_CUSTOM_ETHERNET   false
+#endif
 ```
 
 - To use another Ethernet library
 For example, Ethernet_XYZ library uses **Ethernet_XYZ.h**
 
-```
-// Only one if the following to be true
-#define USE_BUILTIN_ETHERNET  false
-#define USE_ETHERNET          false
-#define USE_ETHERNET2         false
-#define USE_ETHERNET3         false
-#define USE_ETHERNET_LARGE    false
-#define USE_ETHERNET_ENC      false
-#define USE_UIP_ETHERNET      false
-#define USE_CUSTOM_ETHERNET   true
+```cpp
+#define USE_BUILTIN_ETHERNET    false
+#define USE_UIP_ETHERNET        false
+
+#if !(USE_BUILTIN_ETHERNET || USE_UIP_ETHERNET)
+  // Only one of the following to be true
+  #define USE_ETHERNET          false
+  #define USE_ETHERNET2         false
+  #define USE_ETHERNET3         false
+  #define USE_ETHERNET_LARGE    false
+  #define USE_ETHERNET_ESP8266  false
+  #define USE_ETHERNET_ENC      false
+  #define USE_CUSTOM_ETHERNET   true
+#endif
+
+....
+
+#elif USE_CUSTOM_ETHERNET
+  //#include "Ethernet_XYZ.h"
+  #include "EthernetENC.h"
+  #warning Using Custom Ethernet library. You must include a library and initialize.
+  #define SHIELD_TYPE           "Custom Ethernet & Ethernet_XYZ Library"
+#else
+  #define USE_ETHERNET          true
+  #include "Ethernet.h"
+  #warning Using Ethernet lib
+  #define SHIELD_TYPE           "W5x00 & Ethernet Library"
+#endif  
 ...
 
-#include <Ethernet_XYZ.h.h>
+#include <Ethernet_Manager_STM32.h>
+
 ```
+
+---
+
+### Important:
+
+- The **Ethernet_Shield_W5200, EtherCard, EtherSia  libraries are not supported**. Don't use unless you know how to modify those libraries.
+- Requests to support for any future custom Ethernet library will be ignored. **Use at your own risk**.
+
+---
 
 #### 2. How to select another CS/SS pin to use
 
@@ -395,11 +568,6 @@ then select the CS/SS pin (e.g. 22) to use as follows:
   Ethernet.setCsPin (USE_THIS_SS_PIN);
   Ethernet.init (ETHERNET3_MAX_SOCK_NUM);
 ```
-
-#### Not supported Libraries
-
-- The **Ethernet_Shield_W5200, EtherCard, EtherSia  libraries are not supported**. Don't use unless you know how to modify those libraries.
-- Requests to support for any future custom Ethernet library will be ignored. **Use at your own risk**.
 
 ---
 
@@ -616,12 +784,76 @@ Please be noted that the following **reserved names are already used in library*
 ---
 ---
 
+### HOWTO use STM32F4 with LAN8720
+
+#### 1. Wiring
+
+This is the Wiring for STM32F4 (BLACK_F407VE, etc.) using LAN8720
+
+
+|LAN8720 PHY|<--->|STM32F4|
+|:-:|:-:|:-:|
+|TX1|<--->|PB_13|
+|TX_EN|<--->|PB_11|
+|TX0|<--->|PB_12|
+|RX0|<--->|PC_4|
+|RX1|<--->|PC_5|
+|nINT/RETCLK|<--->|PA_1|
+|CRS|<--->|PA_7|
+|MDIO|<--->|PA_2|
+|MDC|<--->|PC_1|
+|GND|<--->|GND|
+|VCC|<--->|+3.3V|
+
+---
+
+#### 2. HOWTO program using STLink V-2 or V-3
+
+Connect as follows. To program, use **STM32CubeProgrammer** or Arduino IDE with 
+
+- **U(S)ART Support: "Enabled (generic Serial)"**
+- **Upload Method : "STM32CubeProgrammer (SWD)"**
+
+
+|STLink|<--->|STM32F4|
+|:-:|:-:|:-:|
+|SWCLK|<--->|SWCLK|
+|SWDIO|<--->|SWDIO|
+|RST|<--->|NRST|
+|GND|<--->|GND|
+|5v|<--->|5V|
+
+
+<p align="center">
+    <img src="https://github.com/khoih-prog/Ethernet_Manager_STM32/blob/main/pics/STM32F407VET6.png">
+</p>
+
+---
+
+#### 3. HOWTO use Serial Port for Debugging
+
+Connect FDTI (USB to Serial) as follows:
+
+|FDTI|<--->|STM32F4|
+|:-:|:-:|:-:|
+|RX|<--->|TX=PA_9|
+|TX|<--->|RX=PA_10|
+|GND|<--->|GND|
+
+
+---
+---
+
 ### Examples
 
  1. [AM2315_Ethernet_STM32](examples/AM2315_Ethernet_STM32)
  2. [DHT11_Ethernet_STM32](examples/DHT11_Ethernet_STM32)
  3. [Ethernet_STM32](examples/Ethernet_STM32) 
  4. [MQTT_ThingStream_Ethernet_STM32](examples/MQTT_ThingStream_Ethernet_STM32)
+ 5. [AM2315_Ethernet_STM32_LAN8720](examples/AM2315_Ethernet_STM32_LAN8720)
+ 6. [DHT11_Ethernet_STM32_LAN8720](examples/DHT11_Ethernet_STM32_LAN8720)
+ 7. [Ethernet_STM32_LAN8720](examples/Ethernet_STM32_LAN8720) 
+ 8. [MQTT_ThingStream_Ethernet_STM32_LAN8720](examples/MQTT_ThingStream_Ethernet_STM32_LAN8720)
 
 ---
 ---
@@ -1130,54 +1362,54 @@ void loop()
 #define USE_CUSTOM_ETHERNET   false
 
 #if defined(STM32F0)
-#warning STM32F0 board selected
-#define BOARD_TYPE  "STM32F0"
+  #warning STM32F0 board selected
+  #define BOARD_TYPE  "STM32F0"
 #elif defined(STM32F1)
-#warning STM32F1 board selected
-#define BOARD_TYPE  "STM32F1"
+  #warning STM32F1 board selected
+  #define BOARD_TYPE  "STM32F1"
 #elif defined(STM32F2)
-#warning STM32F2 board selected
-#define BOARD_TYPE  "STM32F2"
+  #warning STM32F2 board selected
+  #define BOARD_TYPE  "STM32F2"
 #elif defined(STM32F3)
-#warning STM32F3 board selected
-#define BOARD_TYPE  "STM32F3"
+  #warning STM32F3 board selected
+  #define BOARD_TYPE  "STM32F3"
 #elif defined(STM32F4)
-#warning STM32F4 board selected
-#define BOARD_TYPE  "STM32F4"
+  #warning STM32F4 board selected
+  #define BOARD_TYPE  "STM32F4"
 #elif defined(STM32F7)
-#warning STM32F7 board selected
-#define BOARD_TYPE  "STM32F7"
+  #warning STM32F7 board selected
+  #define BOARD_TYPE  "STM32F7"
 #elif defined(STM32L0)
-#warning STM32L0 board selected
-#define BOARD_TYPE  "STM32L0"
+  #warning STM32L0 board selected
+  #define BOARD_TYPE  "STM32L0"
 #elif defined(STM32L1)
-#warning STM32L1 board selected
-#define BOARD_TYPE  "STM32L1"
+  #warning STM32L1 board selected
+  #define BOARD_TYPE  "STM32L1"
 #elif defined(STM32L4)
-#warning STM32L4 board selected
-#define BOARD_TYPE  "STM32L4"
+  #warning STM32L4 board selected
+  #define BOARD_TYPE  "STM32L4"
 #elif defined(STM32H7)
-#warning STM32H7 board selected
-#define BOARD_TYPE  "STM32H7"
+  #warning STM32H7 board selected
+  #define BOARD_TYPE  "STM32H7"
 #elif defined(STM32G0)
-#warning STM32G0 board selected
-#define BOARD_TYPE  "STM32G0"
+  #warning STM32G0 board selected
+  #define BOARD_TYPE  "STM32G0"
 #elif defined(STM32G4)
-#warning STM32G4 board selected
-#define BOARD_TYPE  "STM32G4"
+  #warning STM32G4 board selected
+  #define BOARD_TYPE  "STM32G4"
 #elif defined(STM32WB)
-#warning STM32WB board selected
-#define BOARD_TYPE  "STM32WB"
+  #warning STM32WB board selected
+  #define BOARD_TYPE  "STM32WB"
 #elif defined(STM32MP1)
-#warning STM32MP1 board selected
-#define BOARD_TYPE  "STM32MP1"
+  #warning STM32MP1 board selected
+  #define BOARD_TYPE  "STM32MP1"
 #else
-#warning STM32 unknown board selected
-#define BOARD_TYPE  "STM32 Unknown"
+  #warning STM32 unknown board selected
+  #define BOARD_TYPE  "STM32 Unknown"
 #endif
 
 #ifndef BOARD_NAME
-#define BOARD_NAME    BOARD_TYPE
+  #define BOARD_NAME    BOARD_TYPE
 #endif
 
 //////////////////////////////////////////
@@ -1203,7 +1435,7 @@ void loop()
 #include <Ethernet_Manager_STM32.h>
 
 #ifndef SHIELD_TYPE
-#define SHIELD_TYPE     "Unknown Ethernet shield/library"
+  #define SHIELD_TYPE     "Unknown Ethernet shield/library"
 #endif
 
 #define W5100_CS        10
@@ -1354,7 +1586,7 @@ This is the terminal output of an STM32F7 Nucleo-144 NUCLEO_F767ZI board with LA
 ```
 Start Ethernet_STM32 on NUCLEO_F767ZI
 Ethernet Shield type : LAN8742A Ethernet & STM32Ethernet Library
-Ethernet_Manager_STM32 v1.2.0
+Ethernet_Manager_STM32 v1.3.0
 DoubleResetDetector_Generic v1.0.3
 [ETM] ======= Start Default Config Data =======
 [ETM] Header=  , BoardName= 
@@ -1387,7 +1619,7 @@ H
 ```cpp
 Start Ethernet_STM32 on NUCLEO_F767ZI
 Ethernet Shield type : LAN8742A Ethernet & STM32Ethernet Library
-Ethernet_Manager_STM32 v1.2.0
+Ethernet_Manager_STM32 v1.3.0
 DoubleResetDetector_Generic v1.0.3
 [ETM] ======= Start Default Config Data =======
 [ETM] Header=  , BoardName= 
@@ -1424,7 +1656,7 @@ This is the terminal output of STM32F7 Nucleo-144 NUCLEO_F767ZI board with W5500
 ```
 Start Ethernet_STM32 on NUCLEO_F767ZI
 Ethernet Shield type : W5x00 using Ethernet Library
-Ethernet_Manager_STM32 v1.2.0
+Ethernet_Manager_STM32 v1.3.0
 DoubleResetDetector_Generic v1.0.3
 
 EEPROM size = 16384, start = 0
@@ -1449,7 +1681,7 @@ SetFlag write = 0xd0d01234
 ```
 Start Ethernet_STM32 on NUCLEO_F767ZI
 Ethernet Shield type : W5x00 using Ethernet Library
-Ethernet_Manager_STM32 v1.2.0
+Ethernet_Manager_STM32 v1.3.0
 DoubleResetDetector_Generic v1.0.3
 
 EEPROM size = 16384, start = 0
@@ -1494,7 +1726,7 @@ H
 ```
 Start Ethernet_STM32 on NUCLEO_F767ZI
 Ethernet Shield type : W5x00 using Ethernet Library
-Ethernet_Manager_STM32 v1.2.0
+Ethernet_Manager_STM32 v1.3.0
 DoubleResetDetector_Generic v1.0.3
 
 EEPROM size = 16384, start = 0
@@ -1542,7 +1774,7 @@ This is the terminal output of STM32F7 Nucleo-144 NUCLEO_F767ZI board with ENC28
 ```
 Start MQTT_ThingStream_Ethernet_STM32 on NUCLEO_F767ZI
 Ethernet Shield type : ENC28J60 using EthernetENC Library
-Ethernet_Manager_STM32 v1.2.0
+Ethernet_Manager_STM32 v1.3.0
 DoubleResetDetector_Generic v1.0.3
 
 EEPROM size = 16384, start = 0
@@ -1576,7 +1808,7 @@ ClearFlag write = 0xd0d04321
 ```
 Start MQTT_ThingStream_Ethernet_STM32 on NUCLEO_F767ZI
 Ethernet Shield type : ENC28J60 using EthernetENC Library
-Ethernet_Manager_STM32 v1.2.0
+Ethernet_Manager_STM32 v1.3.0
 DoubleResetDetector_Generic v1.0.3
 
 EEPROM size = 16384, start = 0
@@ -1629,7 +1861,7 @@ This is the terminal output of STM32F7 Nucleo-144 NUCLEO_F767ZI board with W5x00
 ```
 Start Ethernet_STM32 on NUCLEO_F767ZI
 Ethernet Shield type : W5x00 using EthernetLarge Library
-Ethernet_Manager_STM32 v1.2.0
+Ethernet_Manager_STM32 v1.3.0
 DoubleResetDetector_Generic v1.0.3
 
 EEPROM size = 16384, start = 0
@@ -1677,7 +1909,7 @@ This is the terminal output of STM32F7 Nucleo-144 NUCLEO_F767ZI board with LAN87
 ```
 Start MQTT_ThingStream_Ethernet_STM32 on NUCLEO_F767ZI
 Ethernet Shield type : LAN8742A Ethernet & STM32Ethernet Library
-Ethernet_Manager_STM32 v1.2.0
+Ethernet_Manager_STM32 v1.3.0
 DoubleResetDetector_Generic v1.0.3
 
 EEPROM size = 16384, start = 0
@@ -1711,7 +1943,7 @@ ClearFlag write = 0xd0d04321
 ```
 Start MQTT_ThingStream_Ethernet_STM32 on NUCLEO_F767ZI
 Ethernet Shield type : LAN8742A Ethernet & STM32Ethernet Library
-Ethernet_Manager_STM32 v1.2.0
+Ethernet_Manager_STM32 v1.3.0
 DoubleResetDetector_Generic v1.0.3
 
 EEPROM size = 16384, start = 0
@@ -1763,6 +1995,100 @@ HH
 ```
 
 ---
+
+#### 6. MQTT_ThingStream_Ethernet_STM32_LAN8720 on STM32F4 BLACK_F407VE with LAN8720 Ethernet using STM32Ethernet Library
+
+This is the terminal output of STM32F4 BLACK_F407VE with LAN8720 Ethernet using STM32Ethernet Library, running complex [MQTT_ThingStream_Ethernet_STM32_LAN8720](examples/MQTT_ThingStream_Ethernet_STM32_LAN8720) example to demonstrate how to use dynamic parameters, entered via Config Portal, to connect to [**ThingStream MQTT Server**](mqtt.thingstream.io).
+
+#### 6.1. Normal run without correct ThingStream MQTT Credentials
+
+```
+Start MQTT_ThingStream_Ethernet_STM32_LAN8720 on BLACK_F407VE
+Ethernet Shield type : LAN8720 Ethernet & STM32Ethernet Library
+Ethernet_Manager_STM32 v1.3.0
+DoubleResetDetector_Generic v1.0.3
+
+EEPROM size = 16384, start = 0
+Flag read = 0xd0d01234
+doubleResetDetected
+ClearFlag write = 0xd0d04321
+[ETM] =====================
+[ETM] DRD. Run ConfigPortal
+[ETM] =====================
+[ETM] EEPROMsz:4096
+[ETM] EEPROM Length():16384
+[ETM] CCSum=0x77e,RCSum=0x77e
+[ETM] ChkCrR:CrCCsum=0x215e,CrRCsum=0x215e
+[ETM] CrCCSum=215e,CrRCSum=215e
+[ETM] Valid Stored Dynamic Data
+[ETM] ======= Start Stored Config Data =======
+[ETM] Header=STM32, BoardName=STM32-Ethernet
+[ETM] StaticIP=
+[ETM] Start connectEthernet using DHCP
+[ETM] MAC:FE-98-FD-D6-DB-BA
+[ETM] Dynamic IP OK, connected
+[ETM] IP:192.168.2.149
+[ETM] bg: isForcedConfigPortal = false
+[ETM] bg:Stay forever in CP:DRD/MRD
+Connected! IP address: 192.168.2.149
+***************************************
+esp32-sniffer/12345678/ble
+***************************************
+[ETM] h:Updating EEPROM. Please wait for reset
+[ETM] SaveEEPROM,Sz=16384,DataSz=248,WCSum=0x8a9
+[ETM] CrCCSum=0x2785
+[ETM] h:Rst
+```
+
+#### 6.2. Got correct ThingStream MQTT Credentials from Config Portal
+
+```
+Start MQTT_ThingStream_Ethernet_STM32_LAN8720 on BLACK_F407VE
+Ethernet Shield type : LAN8720 Ethernet & STM32Ethernet Library
+Ethernet_Manager_STM32 v1.3.0
+DoubleResetDetector_Generic v1.0.3
+
+EEPROM size = 16384, start = 0
+Flag read = 0xd0d04321
+No doubleResetDetected
+SetFlag write = 0xd0d01234
+[ETM] EEPROMsz:4096
+[ETM] EEPROM Length():16384
+[ETM] CCSum=0x8a9,RCSum=0x8a9
+[ETM] ChkCrR:CrCCsum=0x2785,CrRCsum=0x2785
+[ETM] CrCCSum=2785,CrRCSum=2785
+[ETM] Valid Stored Dynamic Data
+[ETM] ======= Start Stored Config Data =======
+[ETM] Header=STM32, BoardName=STM32-Ethernet
+[ETM] StaticIP=192.168.2.220
+[ETM] Start connectEthernet using Static IP =192.168.2.220
+[ETM] MAC:FE-98-FD-D6-DF-BA
+[ETM] IP:192.168.2.220
+[ETM] begin:Ethernet Connected.
+Connected! IP address: 192.168.2.220
+***************************************
+esp32-sniffer/12345678/ble
+***************************************
+
+Your stored Credentials :
+MQTT Server = mqtt.thingstream.io
+Port = 1883
+MQTT UserName = user_name
+MQTT PWD = password
+Client ID = device:12345678-1234-1234-1234-123456789abc
+Attempting MQTT connection to mqtt.thingstream.io
+...connected
+Published connection message successfully!
+Subcribed to: esp32-sniffer/12345678/ble
+HStop doubleResetDetecting
+ClearFlag write = 0xd0d04321
+
+MQTT Message Send : esp32-sniffer/12345678/ble => Hello from MQTT_ThingStream on BLACK_F407VE with LAN8720 Ethernet & STM32Ethernet Library
+H
+MQTT Message receive [esp32-sniffer/12345678/ble] Hello from MQTT_ThingStream on BLACK_F407VE with LAN8720 Ethernet & STM32Ethernet Library
+```
+
+---
 ---
 
 ### Debug
@@ -1794,6 +2120,12 @@ Sometimes, the library will only work if you update the board core to the latest
 ---
 
 ## Releases
+
+### Releases v1.3.0
+
+1. Add support to **LAN8720** Ethernet for many **STM32F4** (F407xx, NUCLEO_F429ZI) and **STM32F7** (DISCO_F746NG, NUCLEO_F746ZG, NUCLEO_F756ZG) boards.
+2. Add LAN8720 examples
+3. Add Packages' Patches for STM32 to use LAN8720 with STM32Ethernet and LwIP libraries
 
 ### Major Releases v1.2.0
 
@@ -1841,12 +2173,19 @@ Sometimes, the library will only work if you update the board core to the latest
 - 3-D printer boards
 - Generic Flight Controllers
 - Midatronics boards
+
+3. **STM32 boards using Ethernet LAN8720** such as :
+
+  - **Nucleo-144 (F429ZI, NUCLEO_F746NG, NUCLEO_F746ZG, NUCLEO_F756ZG)**
+  - **Discovery (DISCO_F746NG)**
+  - **STM32F4 boards (BLACK_F407VE, BLACK_F407VG, BLACK_F407ZE, BLACK_F407ZG, BLACK_F407VE_Mini, DIYMORE_F407VGT, FK407M1)**
  
 #### Supported Ethernet shields/modules:
 
-1. Built-in LAN8742A Ethernet using [`STM32Ethernet library v1.2.0+`](https://github.com/stm32duino/STM32Ethernet) and [`LwIP library v2.1.2+`](https://github.com/stm32duino/LwIP)
+1. Built-in Ethernet LAN8742A using [`STM32Ethernet library`](https://github.com/stm32duino/STM32Ethernet)
 2. W5x00 using [`Ethernet`](https://www.arduino.cc/en/Reference/Ethernet), [`EthernetLarge`](https://github.com/OPEnSLab-OSU/EthernetLarge), [`Ethernet2`](https://github.com/adafruit/Ethernet2) or [`Ethernet3`](https://github.com/sstaub/Ethernet3) library
 3. ENC28J60 using [`EthernetENC`](https://github.com/jandrassy/EthernetENC) or [`UIPEthernet`](https://github.com/UIPEthernet/UIPEthernet) library
+4. LAN8720 using [`STM32Ethernet`](https://github.com/stm32duino/STM32Ethernet) and [`LwIP`](https://github.com/stm32duino/LwIP) libraries.
 
 
 ---
@@ -1884,6 +2223,7 @@ Submit issues to: [Ethernet_Manager_STM32 issues](https://github.com/khoih-prog/
 15. Add support to new [**`EthernetENC library`**](https://github.com/jandrassy/EthernetENC) for ENC28J60.
 16. Add Table of Contents and Version String
 17. Configurable **Customs HTML Headers**, including Customs Style, Customs Head Elements, CORS Header
+18. Add support to **Ethernet LAN8720** using [STM32Ethernet library](https://github.com/stm32duino/STM32Ethernet), for boards such as **Nucleo-144 (F429ZI, NUCLEO_F746NG, NUCLEO_F746ZG, NUCLEO_F756ZG), Discovery (DISCO_F746NG)** and **STM32F4 boards (BLACK_F407VE, BLACK_F407VG, BLACK_F407ZE, BLACK_F407ZG, BLACK_F407VE_Mini, DIYMORE_F407VGT, FK407M1)**
 
 ---
 
