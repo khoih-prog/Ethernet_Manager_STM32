@@ -93,7 +93,7 @@
   * [5. MQTT_ThingStream_Ethernet_STM32 on STM32F7 NUCLEO_F767ZI with LAN8742A Ethernet using STM32Ethernet Library](#5-mqtt_thingstream_ethernet_stm32-on-stm32f7-nucleo_f767zi-with-lan8742a-ethernet-using-stm32ethernet-library)
     * [5.1. Normal run without correct ThingStream MQTT Credentials](#51-normal-run-without-correct-thingstream-mqtt-credentials)
     * [5.2. Got correct ThingStream MQTT Credentials from Config Portal](#52-got-correct-thingstream-mqtt-credentials-from-config-portal)
-  * [6. MQTT_ThingStream_Ethernet_STM32_LAN8720 on STM32F4 BLACK_F407VE with LAN8720 Ethernet using STM32Ethernet Library](#6-mqtt_thingstream_ethernet_stm32_lan8720-on-stm32f4-black_f407ve-with-lan8742a-ethernet-using-stm32ethernet-library)
+  * [6. MQTT_ThingStream_Ethernet_STM32_LAN8720 on STM32F4 BLACK_F407VE with LAN8720 Ethernet using STM32Ethernet Library](#6-mqtt_thingstream_ethernet_stm32_lan8720-on-stm32f4-black_f407ve-with-lan8720-ethernet-using-stm32ethernet-library)
     * [6.1. Normal run without correct ThingStream MQTT Credentials](#61-normal-run-without-correct-thingstream-mqtt-credentials)
     * [6.2. Got correct ThingStream MQTT Credentials from Config Portal](#62-got-correct-thingstream-mqtt-credentials-from-config-portal) 
 * [Debug](#debug)
