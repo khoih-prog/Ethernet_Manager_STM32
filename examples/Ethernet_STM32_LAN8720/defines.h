@@ -31,8 +31,8 @@
 #define ETHERNET_MANAGER_STM32_DEBUG_PORT       Serial
 
 // Debug Level from 0 to 4
-#define _ETHERNET_WEBSERVER_LOGLEVEL_           0
-#define _ETHERNET_MANAGER_STM32_LOGLEVEL_       2
+#define _ETHERNET_WEBSERVER_LOGLEVEL_           4
+#define _ETHERNET_MANAGER_STM32_LOGLEVEL_       4
 
 #define DRD_GENERIC_DEBUG                       true
 
