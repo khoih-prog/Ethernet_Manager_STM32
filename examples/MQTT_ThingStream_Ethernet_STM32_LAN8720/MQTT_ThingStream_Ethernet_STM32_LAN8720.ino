@@ -173,10 +173,8 @@ void setup()
   Serial.begin(115200);
   delay(2000);
 
-  Serial.print(F("\nStart MQTT_ThingStream_Ethernet_STM32_LAN8720 on "));
-  Serial.println(BOARD_NAME);
-  Serial.print(F("Ethernet Shield type : "));
-  Serial.println(SHIELD_TYPE);
+  Serial.print(F("\nStart MQTT_ThingStream_Ethernet_STM32_LAN8720 on ")); Serial.println(BOARD_NAME);
+  Serial.print(F("Ethernet Shield type : ")); Serial.println(SHIELD_TYPE);
   Serial.println(ETHERNET_MANAGER_STM32_VERSION);
   Serial.println(DOUBLERESETDETECTOR_GENERIC_VERSION);
 

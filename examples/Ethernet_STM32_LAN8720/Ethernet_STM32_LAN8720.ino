@@ -27,7 +27,7 @@ void heartBeatPrint()
   // The linkStatus() is not working with W5100. Just using IP != 0.0.0.0
   // Better to use ping for W5100
   linkStatus = (int) Ethernet.linkStatus();
-  ET_LOGINFO3(F("localEthernetIP = "), localEthernetIP, F(", linkStatus = "), (linkStatus == LinkON) ? F("LinkON") : F("LinkOFF") );
+  ETM_LOGINFO3(F("localEthernetIP = "), localEthernetIP, F(", linkStatus = "), (linkStatus == LinkON) ? F("LinkON") : F("LinkOFF") );
   
   if ( (uint32_t) localEthernetIP != 0 )
   {
@@ -72,10 +72,8 @@ void setup()
   Serial.begin(115200);
   delay(2000);
 
-  Serial.print(F("\nStart Ethernet_STM32_LAN8720 on "));
-  Serial.println(BOARD_NAME);
-  Serial.print(F("Ethernet Shield type : "));
-  Serial.println(SHIELD_TYPE);
+  Serial.print(F("\nStart Ethernet_STM32_LAN8720 on ")); Serial.println(BOARD_NAME);
+  Serial.print(F("Ethernet Shield type : ")); Serial.println(SHIELD_TYPE);
   Serial.println(ETHERNET_MANAGER_STM32_VERSION);
   Serial.println(DOUBLERESETDETECTOR_GENERIC_VERSION);
 

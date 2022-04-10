@@ -43,11 +43,8 @@
 #define USE_THIS_SS_PIN       10
 
 // Only one if the following to be true
-#define USE_BUILTIN_ETHERNET  false
-#define USE_ETHERNET          false
-#define USE_ETHERNET2         false
-#define USE_ETHERNET3         false
-#define USE_ETHERNET_LARGE    true
+#define USE_BUILTIN_ETHERNET  true
+#define USE_ETHERNET_GENERIC  false
 #define USE_ETHERNET_ENC      false
 #define USE_UIP_ETHERNET      false
 #define USE_CUSTOM_ETHERNET   false
@@ -126,11 +123,18 @@
 #include <Ethernet_Manager_STM32.h>
 
 #ifndef SHIELD_TYPE
-#define SHIELD_TYPE     "Unknown Ethernet shield/library"
+  #define SHIELD_TYPE     "Unknown Ethernet shield/library" 
 #endif
 
-#define W5100_CS        10
-#define SDCARD_CS       4
+#if USE_ETHERNET_GENERIC
+  // Change to true if using old Ethernet card with built-in SD
+  #define ETHERNET_WITH_SD_CARD   false
+#endif
+
+#if (defined(ETHERNET_WITH_SD_CARD) && ETHERNET_WITH_SD_CARD)
+  #define W5100_CS        10
+  #define SDCARD_CS       4
+#endif
 
 #define ETHERNET_HOST_NAME   "STM32-Ethernet"
 
