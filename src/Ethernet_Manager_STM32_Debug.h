@@ -7,7 +7,8 @@
 
   Built by Khoi Hoang https://github.com/khoih-prog/Ethernet_Manager_STM32
   Licensed under MIT license
-  Version: 1.3.1
+    
+  Version: 1.3.2
 
   Version  Modified By   Date      Comments
   -------  -----------  ---------- -----------
@@ -16,18 +17,23 @@
   1.2.0     K Hoang     23/02/2021 Optimize code and use better FlashStorage_STM32. Add customs HTML header feature. Fix bug.
   1.3.0     K Hoang     11/04/2021 Add support to LAN8720 using STM32F4 or STM32F7
   1.3.1     K Hoang     10/10/2021 Update `platform.ini` and `library.json`
+  1.3.2     K Hoang     10/04/2022 Use Ethernet_Generic library as default.
  *****************************************************************************************************************************/
 
 #pragma once
 
-#ifndef Ethernet_Manager_STM32_Debug
-#define Ethernet_Manager_STM32_Debug
+#ifndef ETHERNET_MANAGER_STM32_DEBUG_H
+#define ETHERNET_MANAGER_STM32_DEBUG_H
+
+///////////////////////////////////////////////////////////////
 
 #ifdef ETHERNET_MANAGER_STM32_DEBUG_PORT
   #define ETM_DBG_PORT      ETHERNET_MANAGER_STM32_DEBUG_PORT
 #else
   #define ETM_DBG_PORT      Serial
 #endif
+
+///////////////////////////////////////////////////////////////
 
 // Change _ETHERNET_MANAGER_STM32_LOGLEVEL_ to set tracing and logging verbosity
 // 0: DISABLED: no logging
@@ -85,4 +91,4 @@ const char ETM_MARK[] = "[ETM] ";
 
 ////////////////////////////////////////////////////
 
-#endif    //Ethernet_Manager_STM32_Debug
+#endif    //ETHERNET_MANAGER_STM32_DEBUG_H

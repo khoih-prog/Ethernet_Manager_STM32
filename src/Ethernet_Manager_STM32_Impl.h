@@ -7,7 +7,8 @@
 
   Built by Khoi Hoang https://github.com/khoih-prog/Ethernet_Manager_STM32
   Licensed under MIT license
-  Version: 1.3.1
+    
+  Version: 1.3.2
 
   Version  Modified By   Date      Comments
   -------  -----------  ---------- -----------
@@ -16,12 +17,13 @@
   1.2.0     K Hoang     23/02/2021 Optimize code and use better FlashStorage_STM32. Add customs HTML header feature. Fix bug.
   1.3.0     K Hoang     11/04/2021 Add support to LAN8720 using STM32F4 or STM32F7
   1.3.1     K Hoang     10/10/2021 Update `platform.ini` and `library.json`
+  1.3.2     K Hoang     10/04/2022 Use Ethernet_Generic library as default.
  *****************************************************************************************************************************/
 
 #pragma once
 
-#ifndef Ethernet_Manager_STM32_Impl
-#define Ethernet_Manager_STM32_Impl
+#ifndef ETHERNET_MANAGER_STM32_IMPL_H
+#define ETHERNET_MANAGER_STM32_IMPL_H
 
 // Increase HTTP_UPLOAD_BUFLEN to 4K, instead of default 2K in <EthernetWebServer.h>
 #define HTTP_UPLOAD_BUFLEN    4096
@@ -79,13 +81,17 @@ typedef struct
 //
 
 #if USE_DYNAMIC_PARAMETERS
-  #warning Using Dynamic Parameters
+  #if (_ETHERNET_MANAGER_STM32_LOGLEVEL_ > 2)
+    #warning Using Dynamic Parameters
+  #endif
   ///NEW
   extern uint16_t NUM_MENU_ITEMS;
   extern MenuItem myMenuItems [];
   bool *menuItemUpdated = NULL;
 #else
-  #warning Not using Dynamic Parameters
+  #if (_ETHERNET_MANAGER_STM32_LOGLEVEL_ > 2)
+    #warning Not using Dynamic Parameters
+  #endif
 #endif
 
 // Configurable items besides fixed Header
@@ -109,6 +115,8 @@ uint16_t CONFIG_DATA_SIZE = sizeof(Ethernet_Configuration);
 ///New from v1.0.13
 extern bool LOAD_DEFAULT_CONFIG_DATA;
 extern Ethernet_Configuration defaultConfig;
+
+///////////////////////////////////////////////////////////////
 
 // -- HTML page fragments
 
@@ -154,7 +162,6 @@ const char WM_HTTP_CORS_ALLOW_ALL[]  PROGMEM = "*";
 
 class Ethernet_Manager
 {
-
   public:
   
     void begin(bool initialConfig = false)
@@ -565,12 +572,18 @@ class Ethernet_Manager
   #define EEPROM_SIZE       4096
 #else
   #if (EEPROM_SIZE > 4096)
-    #warning EEPROM_SIZE must be <= 4096. Reset to 4096
+    #if (_ETHERNET_MANAGER_STM32_LOGLEVEL_ > 2)
+      #warning EEPROM_SIZE must be <= 4096. Reset to 4096
+    #endif
+    
     #undef EEPROM_SIZE
     #define EEPROM_SIZE     4096
   #endif
   #if (EEPROM_SIZE < CONFIG_DATA_SIZE)
-    #warning EEPROM_SIZE must be > CONFIG_DATA_SIZE. Reset to 512
+    #if (_ETHERNET_MANAGER_STM32_LOGLEVEL_ > 2)
+      #warning EEPROM_SIZE must be > CONFIG_DATA_SIZE. Reset to 512
+    #endif
+    
     #undef EEPROM_SIZE
     #define EEPROM_SIZE     512
   #endif
@@ -578,7 +591,10 @@ class Ethernet_Manager
 
 #ifndef EEPROM_START
   #define EEPROM_START     0
-  #warning EEPROM_START not defined. Set to 0
+  
+  #if (_ETHERNET_MANAGER_STM32_LOGLEVEL_ > 2)
+    #warning EEPROM_START not defined. Set to 0
+  #endif
 #else
   #if (EEPROM_START + DRD_FLAG_DATA_SIZE + CONFIG_DATA_SIZE + FORCED_CONFIG_PORTAL_FLAG_DATA_SIZE > EEPROM_SIZE)
     #error EPROM_START + DRD_FLAG_DATA_SIZE + CONFIG_DATA_SIZE + FORCED_CONFIG_PORTAL_FLAG_DATA_SIZE > EEPROM_SIZE. Please adjust.
@@ -604,7 +620,10 @@ class Ethernet_Manager
 #if defined(DATA_EEPROM_BASE)
     // For STM32 devices having integrated EEPROM.
     #include <EEPROM.h>
-    #warning STM32 devices have integrated EEPROM. Not using buffered API.   
+    
+    #if (_ETHERNET_MANAGER_STM32_LOGLEVEL_ > 2)
+      #warning STM32 devices have integrated EEPROM. Not using buffered API
+    #endif
 #else  
     /**
      Most STM32 devices don't have an integrated EEPROM. To emulate a EEPROM, the STM32 Arduino core emulated
@@ -615,7 +634,10 @@ class Ethernet_Manager
      buffer even if you don't use the buffered API, so it's strongly suggested to use the buffered API anyhow.
      */
     #include <FlashStorage_STM32.h>       // https://github.com/khoih-prog/FlashStorage_STM32
-    #warning STM32 devices have no integrated EEPROM. Using buffered API with FlashStorage_STM32 library
+    
+    #if (_ETHERNET_MANAGER_STM32_LOGLEVEL_ > 2)
+      #warning STM32 devices have no integrated EEPROM. Using buffered API with FlashStorage_STM32 library
+    #endif
 #endif    // #if defined(DATA_EEPROM_BASE)
 //////////////////////////////////////////////    
 
@@ -1256,7 +1278,10 @@ class Ethernet_Manager
     //////////////////////////////////////////////
 
 #ifndef CONFIG_TIMEOUT
-  #warning Default CONFIG_TIMEOUT = 60s
+  #if (_ETHERNET_MANAGER_STM32_LOGLEVEL_ > 2)
+    #warning Default CONFIG_TIMEOUT = 60s
+  #endif
+  
   #define CONFIG_TIMEOUT			60000L
 #endif
 
@@ -1331,12 +1356,12 @@ class Ethernet_Manager
 #if (USE_ETHERNET2 || USE_ETHERNET3)
         // To modify Ethernet2 library
         linkStatus = Ethernet.link();
-        ET_LOGINFO1(F("linkStatus = "), (linkStatus == 1) ? F("LinkON") : F("LinkOFF") );
+        ETM_LOGINFO1(F("linkStatus = "), (linkStatus == 1) ? F("LinkON") : F("LinkOFF") );
       
         if ( Ethernet.link() != 1 )
 #else          
         linkStatus = (int) Ethernet.linkStatus();
-        ET_LOGINFO1(F("linkStatus = "), (linkStatus == LinkON) ? F("LinkON") : F("LinkOFF") );
+        ETM_LOGINFO1(F("linkStatus = "), (linkStatus == LinkON) ? F("LinkON") : F("LinkOFF") );
         
         if (linkStatus != LinkON)
 #endif        
@@ -1394,5 +1419,5 @@ class Ethernet_Manager
 
 };
 
-#endif    // Ethernet_Manager_STM32_Impl
+#endif    // ETHERNET_MANAGER_STM32_IMPL_H
 
