@@ -164,7 +164,7 @@ New recent features:
 #### Currently Supported Ethernet shields/modules:
 
 1. Built-in Ethernet LAN8742A using [`STM32Ethernet library`](https://github.com/stm32duino/STM32Ethernet)
-2. W5x00 using [`Ethernet`](https://www.arduino.cc/en/Reference/Ethernet), [`EthernetLarge`](https://github.com/OPEnSLab-OSU/EthernetLarge), [`Ethernet2`](https://github.com/adafruit/Ethernet2) or [`Ethernet3`](https://github.com/sstaub/Ethernet3) library
+2. W5x00 using [`Ethernet_Generic`](https://github.com/khoih-prog/Ethernet_Generic) library
 3. ENC28J60 using [`EthernetENC`](https://github.com/jandrassy/EthernetENC) or [`UIPEthernet`](https://github.com/UIPEthernet/UIPEthernet) library
 4. LAN8720 using [`STM32Ethernet`](https://github.com/stm32duino/STM32Ethernet) and [`LwIP`](https://github.com/stm32duino/LwIP) libraries.
 
@@ -247,7 +247,7 @@ Supposing the STM32 stm32 core version is 2.1.0. These files must be copied into
 - `~/.arduino15/packages/STM32/hardware/stm32/2.1.0/system/STM32F7xx/stm32f7xx_hal_conf_default.h` for Nucleo-144 STM32F7.
 
 Whenever a new version is installed, remember to copy this file into the new version directory. For example, new version is x.yy.zz,
-theses files must be copied into the corresponding directory:
+these files must be copied into the corresponding directory:
 
 - `~/.arduino15/packages/STM32/hardware/stm32/x.yy.zz/system/STM32F4xx/stm32f4xx_hal_conf_default.h`
 - `~/.arduino15/packages/STM32/hardware/stm32/x.yy.zz/system/STM32F7xx/stm32f7xx_hal_conf_default.h
@@ -263,7 +263,7 @@ Supposing the STM32 stm32 core version is 2.1.0. These files must be copied into
 - `~/.arduino15/packages/STM32/hardware/stm32/2.1.0/variants/STM32L0xx/L052R(6-8)T_L053R(6-8)T_L063R8T/NUCLEO_L053R8/variant.h` for Nucleo-64 NUCLEO_L053R8.
 
 Whenever a new version is installed, remember to copy this file into the new version directory. For example, new version is x.yy.zz,
-theses files must be copied into the corresponding directory:
+these files must be copied into the corresponding directory:
 
 - `~/.arduino15/packages/STM32/hardware/stm32/x.yy.zz/variants/STM32F7xx/F765Z(G-I)T_F767Z(G-I)T_F777ZIT/NUCLEO_F767ZI/variant.h`
 - `~/.arduino15/packages/STM32/hardware/stm32/x.yy.zz/variants/STM32L0xx/L052R(6-8)T_L053R(6-8)T_L063R8T/NUCLEO_L053R8/variant.h`
@@ -1195,7 +1195,7 @@ esp32-sniffer/12345678/ble
 Attempting MQTT connection to mqtt.thingstream.io
 ...connected
 Published connection message successfully!
-Subcribed to: esp32-sniffer/12345678/ble
+Subscribed to: esp32-sniffer/12345678/ble
 
 Your stored Credentials :
 MQTT Server = mqtt.thingstream.io
@@ -1349,7 +1349,7 @@ ClearFlag write = 0xd0d04321
 Attempting MQTT connection to mqtt.thingstream.io
 ...connected
 Published connection message successfully!
-Subcribed to: esp32-sniffer/12345678/ble
+Subscribed to: esp32-sniffer/12345678/ble
 H
 Your stored Credentials :
 MQTT Server = mqtt.thingstream.io
@@ -1459,7 +1459,7 @@ Client ID = device:12345678-1234-1234-1234-123456789abc
 Attempting MQTT connection to mqtt.thingstream.io
 ...connected
 Published connection message successfully!
-Subcribed to: esp32-sniffer/12345678/ble
+Subscribed to: esp32-sniffer/12345678/ble
 HStop doubleResetDetecting
 ClearFlag write = 0xd0d04321
 
