@@ -1,13 +1,13 @@
 /****************************************************************************************************************************
   Ethernet_Manager_STM32.h
   For W5x00, ENC28J60 and built-in LAN8742A Ethernet shields.
-    
+
   Ethernet_Manager is a library for STM32F/L/H/G/WB/MP1 with Ethernet W5x00, ENC28J60 or built-in LAN8742A shields,
   to enable easy configuration/reconfiguration of Credentials and autoconnect/autoreconnect of Ethernet.
 
   Built by Khoi Hoang https://github.com/khoih-prog/Ethernet_Manager_STM32
   Licensed under MIT license
-  
+
   Version: 1.3.2
 
   Version  Modified By   Date      Comments
@@ -43,12 +43,12 @@
 #if ( defined(STM32F0) || defined(STM32F1) || defined(STM32F2) || defined(STM32F3)  ||defined(STM32F4) || defined(STM32F7) || \
        defined(STM32L0) || defined(STM32L1) || defined(STM32L4) || defined(STM32H7)  ||defined(STM32G0) || defined(STM32G4) || \
        defined(STM32WB) || defined(STM32MP1) )
-  #if defined(ETHERNET_USE_STM32)
-    #undef ETHERNET_USE_STM32
-  #endif
-  #define ETHERNET_USE_STM32        true
-#else   
- #error This code is designed to run on STM32F/L/H/G/WB/MP1 platform! Please check your Tools->Board setting.
+#if defined(ETHERNET_USE_STM32)
+  #undef ETHERNET_USE_STM32
+#endif
+#define ETHERNET_USE_STM32        true
+#else
+#error This code is designed to run on STM32F/L/H/G/WB/MP1 platform! Please check your Tools->Board setting.
 #endif
 
 ///////////////////////////////////////////////////////////////
@@ -61,7 +61,7 @@
 #endif
 
 ///////////////////////////////////////////////////////////////
-      
+
 #if (USE_BUILTIN_ETHERNET  | USE_ETHERNET_ENC || USE_UIP_ETHERNET || USE_CUSTOM_ETHERNET)
   // Do nothing here
 #elif USE_ETHERNET_GENERIC
@@ -72,7 +72,7 @@
     #undef USE_ETHERNET_GENERIC
   #endif
   #define USE_ETHERNET_GENERIC   true
-  
+
   #include "Ethernet_Generic.h"
   //#include <EthernetClient.h>
 #endif

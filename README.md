@@ -1,4 +1,4 @@
-## Ethernet_Manager_STM32
+## Ethernet_Manager_STM32 Library
 
 [![arduino-library-badge](https://www.ardu-badge.com/badge/Ethernet_Manager_STM32.svg?)](https://www.ardu-badge.com/Ethernet_Manager_STM32)
 [![GitHub release](https://img.shields.io/github/release/khoih-prog/Ethernet_Manager_STM32.svg)](https://github.com/khoih-prog/Ethernet_Manager_STM32/releases)
@@ -6,8 +6,11 @@
 [![contributions welcome](https://img.shields.io/badge/contributions-welcome-brightgreen.svg?style=flat)](#Contributing)
 [![GitHub issues](https://img.shields.io/github/issues/khoih-prog/Ethernet_Manager_STM32.svg)](http://github.com/khoih-prog/Ethernet_Manager_STM32/issues)
 
+
 <a href="https://www.buymeacoffee.com/khoihprog6" title="Donate to my libraries using BuyMeACoffee"><img src="https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png" alt="Donate to my libraries using BuyMeACoffee" style="height: 50px !important;width: 181px !important;" ></a>
 <a href="https://www.buymeacoffee.com/khoihprog6" title="Donate to my libraries using BuyMeACoffee"><img src="https://img.shields.io/badge/buy%20me%20a%20coffee-donate-orange.svg?logo=buy-me-a-coffee&logoColor=FFDD00" style="height: 20px !important;width: 200px !important;" ></a>
+<a href="https://profile-counter.glitch.me/khoih-prog/count.svg" title="Total khoih-prog Visitor count"><img src="https://profile-counter.glitch.me/khoih-prog/count.svg" style="height: 30px;width: 200px;"></a>
+<a href="https://profile-counter.glitch.me/khoih-prog-Ethernet_Manager_STM32/count.svg" title="Ethernet_Manager_STM32 Visitor count"><img src="https://profile-counter.glitch.me/khoih-prog-Ethernet_Manager_STM32/count.svg" style="height: 30px;width: 200px;"></a>
 
 ---
 ---
@@ -186,8 +189,8 @@ These boards are not supported:
 ## Prerequisites
 
  1. [`Arduino IDE 1.8.19+` for Arduino](https://github.com/arduino/Arduino). [![GitHub release](https://img.shields.io/github/release/arduino/Arduino.svg)](https://github.com/arduino/Arduino/releases/latest)
- 2. [`Arduino Core for STM32 v2.2.0+`](https://github.com/stm32duino/Arduino_Core_STM32) for STM32 boards. [![GitHub release](https://img.shields.io/github/release/stm32duino/Arduino_Core_STM32.svg)](https://github.com/stm32duino/Arduino_Core_STM32/releases/latest)
- 3. [`EthernetWebServer_STM32 library v1.4.0+`](https://github.com/khoih-prog/EthernetWebServer_STM32). To install. check [![arduino-library-badge](https://www.ardu-badge.com/badge/EthernetWebServer_STM32.svg?)](https://www.ardu-badge.com/EthernetWebServer_STM32)
+ 2. [`Arduino Core for STM32 v2.3.0+`](https://github.com/stm32duino/Arduino_Core_STM32) for STM32 boards. [![GitHub release](https://img.shields.io/github/release/stm32duino/Arduino_Core_STM32.svg)](https://github.com/stm32duino/Arduino_Core_STM32/releases/latest)
+ 3. [`EthernetWebServer_STM32 library v1.5.0+`](https://github.com/khoih-prog/EthernetWebServer_STM32). To install. check [![arduino-library-badge](https://www.ardu-badge.com/badge/EthernetWebServer_STM32.svg?)](https://www.ardu-badge.com/EthernetWebServer_STM32)
  4. [`FlashStorage_STM32 library v1.2.0+`](https://github.com/khoih-prog/FlashStorage_STM32) for STM32 boards other than STM32F1. To install. check [![arduino-library-badge](https://www.ardu-badge.com/badge/FlashStorage_STM32.svg?)](https://www.ardu-badge.com/FlashStorage_STM32)
  5. [`FlashStorage_STM32F1 library v1.1.0+`](https://github.com/khoih-prog/FlashStorage_STM32F1) for STM32F1 boards with 64KB+ Flash (STM32F1C8, STM32F1CB, etc.). To install. check [![arduino-library-badge](https://www.ardu-badge.com/badge/FlashStorage_STM32F1.svg?)](https://www.ardu-badge.com/FlashStorage_STM32F1)
  6. [`Functional-Vlpp library v1.0.2+`](https://github.com/khoih-prog/functional-vlpp) to use server's lambda function. To install. check [![arduino-library-badge](https://www.ardu-badge.com/badge/Functional-Vlpp.svg?)](https://www.ardu-badge.com/Functional-Vlpp)
@@ -196,10 +199,10 @@ These boards are not supported:
    - [`STM32Ethernet library v1.2.0+`](https://github.com/stm32duino/STM32Ethernet) for built-in LAN8742A Ethernet on (Nucleo-144, Discovery). [![GitHub release](https://img.shields.io/github/release/stm32duino/STM32Ethernet.svg)](https://github.com/stm32duino/STM32Ethernet/releases/latest)
    - [`LwIP library v2.1.2+`](https://github.com/stm32duino/LwIP) for built-in LAN8742A Ethernet on (Nucleo-144, Discovery). [![GitHub release](https://img.shields.io/github/release/stm32duino/LwIP.svg)](https://github.com/stm32duino/LwIP/releases/latest)
  9. For W5x00 Ethernet:
-   - [`Ethernet_Generic library v2.0.1+`](https://github.com/khoih-prog/Ethernet_Generic) for W5100, W5200 and W5500/WIZ550io/WIZ850io/USR-ES1 with Wiznet W5500 chip.  [![GitHub release](https://img.shields.io/github/release/khoih-prog/Ethernet_Generic.svg)](https://github.com/khoih-prog/Ethernet_Generic/releases/latest)
+   - [`Ethernet_Generic library v2.7.1+`](https://github.com/khoih-prog/Ethernet_Generic) for W5100, W5200 and W5500/WIZ550io/WIZ850io/USR-ES1 with Wiznet W5500 chip.  [![GitHub release](https://img.shields.io/github/release/khoih-prog/Ethernet_Generic.svg)](https://github.com/khoih-prog/Ethernet_Generic/releases/latest)
 10. For ENC28J60 Ethernet:
-   - [`EthernetENC library v2.0.2+`](https://github.com/jandrassy/EthernetENC) for ENC28J60. [![GitHub release](https://img.shields.io/github/release/jandrassy/EthernetENC.svg)](https://github.com/jandrassy/EthernetENC/releases/latest). **New and Better**
-   - [`UIPEthernet library v2.0.11+`](https://github.com/UIPEthernet/UIPEthernet) for ENC28J60. [![GitHub release](https://img.shields.io/github/release/UIPEthernet/UIPEthernet.svg)](https://github.com/UIPEthernet/UIPEthernet/releases/latest)
+   - [`EthernetENC library v2.0.3+`](https://github.com/jandrassy/EthernetENC) for ENC28J60. [![GitHub release](https://img.shields.io/github/release/jandrassy/EthernetENC.svg)](https://github.com/jandrassy/EthernetENC/releases/latest). **New and Better**
+   - [`UIPEthernet library v2.0.12+`](https://github.com/UIPEthernet/UIPEthernet) for ENC28J60. [![GitHub release](https://img.shields.io/github/release/UIPEthernet/UIPEthernet.svg)](https://github.com/UIPEthernet/UIPEthernet/releases/latest)
    
 ---
 
@@ -239,12 +242,12 @@ To use LAN8720 on some STM32 boards
 - **Discovery (DISCO_F746NG)**
 - **STM32F4 boards (BLACK_F407VE, BLACK_F407VG, BLACK_F407ZE, BLACK_F407ZG, BLACK_F407VE_Mini, DIYMORE_F407VGT, FK407M1)**
 
-you have to copy the files [stm32f4xx_hal_conf_default.h](Packages_Patches/STM32/hardware/stm32/2.1.0/system/STM32F4xx) and [stm32f7xx_hal_conf_default.h](Packages_Patches/STM32/hardware/stm32/2.1.0/system/STM32F7xx) into STM32 stm32 directory (~/.arduino15/packages/STM32/hardware/stm32/2.1.0/system) to overwrite the old files.
+you have to copy the files [stm32f4xx_hal_conf_default.h](Packages_Patches/STM32/hardware/stm32/2.2.0/system/STM32F4xx) and [stm32f7xx_hal_conf_default.h](Packages_Patches/STM32/hardware/stm32/2.2.0/system/STM32F7xx) into STM32 stm32 directory (~/.arduino15/packages/STM32/hardware/stm32/2.2.0/system) to overwrite the old files.
 
-Supposing the STM32 stm32 core version is 2.1.0. These files must be copied into the directory:
+Supposing the STM32 stm32 core version is 2.2.0. These files must be copied into the directory:
 
-- `~/.arduino15/packages/STM32/hardware/stm32/2.1.0/system/STM32F4xx/stm32f4xx_hal_conf_default.h` for STM32F4.
-- `~/.arduino15/packages/STM32/hardware/stm32/2.1.0/system/STM32F7xx/stm32f7xx_hal_conf_default.h` for Nucleo-144 STM32F7.
+- `~/.arduino15/packages/STM32/hardware/stm32/2.2.0/system/STM32F4xx/stm32f4xx_hal_conf_default.h` for STM32F4.
+- `~/.arduino15/packages/STM32/hardware/stm32/2.2.0/system/STM32F7xx/stm32f7xx_hal_conf_default.h` for Nucleo-144 STM32F7.
 
 Whenever a new version is installed, remember to copy this file into the new version directory. For example, new version is x.yy.zz,
 these files must be copied into the corresponding directory:
@@ -255,12 +258,12 @@ these files must be copied into the corresponding directory:
 
 #### 2. For STM32 boards to use Serial1
 
-**To use Serial1 on some STM32 boards without Serial1 definition (Nucleo-144 NUCLEO_F767ZI, Nucleo-64 NUCLEO_L053R8, etc.) boards**, you have to copy the files [STM32 variant.h](Packages_Patches/STM32/hardware/stm32/2.1.0) into STM32 stm32 directory (~/.arduino15/packages/STM32/hardware/stm32/2.1.0). You have to modify the files corresponding to your boards, this is just an illustration how to do.
+**To use Serial1 on some STM32 boards without Serial1 definition (Nucleo-144 NUCLEO_F767ZI, Nucleo-64 NUCLEO_L053R8, etc.) boards**, you have to copy the files [STM32 variant.h](Packages_Patches/STM32/hardware/stm32/2.3.0) into STM32 stm32 directory (~/.arduino15/packages/STM32/hardware/stm32/2.3.0). You have to modify the files corresponding to your boards, this is just an illustration how to do.
 
-Supposing the STM32 stm32 core version is 2.1.0. These files must be copied into the directory:
+Supposing the STM32 stm32 core version is 2.3.0. These files must be copied into the directory:
 
-- `~/.arduino15/packages/STM32/hardware/stm32/2.1.0/variants/STM32F7xx/F765Z(G-I)T_F767Z(G-I)T_F777ZIT/NUCLEO_F767ZI/variant.h` for Nucleo-144 NUCLEO_F767ZI.
-- `~/.arduino15/packages/STM32/hardware/stm32/2.1.0/variants/STM32L0xx/L052R(6-8)T_L053R(6-8)T_L063R8T/NUCLEO_L053R8/variant.h` for Nucleo-64 NUCLEO_L053R8.
+- `~/.arduino15/packages/STM32/hardware/stm32/2.3.0/variants/STM32F7xx/F765Z(G-I)T_F767Z(G-I)T_F777ZIT/NUCLEO_F767ZI/variant.h` for Nucleo-144 NUCLEO_F767ZI.
+- `~/.arduino15/packages/STM32/hardware/stm32/2.3.0/variants/STM32L0xx/L052R(6-8)T_L053R(6-8)T_L063R8T/NUCLEO_L053R8/variant.h` for Nucleo-64 NUCLEO_L053R8.
 
 Whenever a new version is installed, remember to copy this file into the new version directory. For example, new version is x.yy.zz,
 these files must be copied into the corresponding directory:
@@ -333,13 +336,13 @@ The current library implementation, using `xyz-Impl.h` instead of standard `xyz.
 
 You can use
 
-```
+```cpp
 #include <Ethernet_Manager_STM32.hpp>               //https://github.com/khoih-prog/Ethernet_Manager_STM32
 ```
 
 in many files. But be sure to use the following `#include <NTPClient_Generic.h>` **in just 1 `.h`, `.cpp` or `.ino` file**, which must **not be included in any other file**, to avoid `Multiple Definitions` Linker Error
 
-```
+```cpp
 // To be included only in main(), .ino with setup() to avoid `Multiple Definitions` Linker Error
 #include <Ethernet_Manager_STM32.h>                //https://github.com/khoih-prog/Ethernet_Manager_STM32
 ```
@@ -371,7 +374,7 @@ Standard W5x00 using Ethernet_Generic library is used by default, in the sketch,
 
 #### To use built-in LAN8742A
 
-```
+```cpp
 // Only one if the following to be true
 #define USE_BUILTIN_ETHERNET  true
 #define USE_ETHERNET_GENERIC  false
@@ -382,7 +385,7 @@ Standard W5x00 using Ethernet_Generic library is used by default, in the sketch,
 
 #### To use LAN8720
 
-```
+```cpp
 #define USING_LAN8720         true
 
 // Only one if the following to be true
@@ -454,7 +457,6 @@ For example, Ethernet_XYZ library uses **Ethernet_XYZ.h**
 ...
 
 #include <Ethernet_Manager_STM32.h>
-
 ```
 
 ---
@@ -472,7 +474,7 @@ The default CS/SS pin is 10 for all boards.
 
 If the default pin is not correct, the easiest way is to change is to select the CS/SS pin (e.g. 22) to use as follows:
 
-```
+```cpp
 // To override the default CS/SS pin. Don't use unless you know exactly which pin to use
 #define USE_THIS_SS_PIN   22
 ```
@@ -480,7 +482,8 @@ If the default pin is not correct, the easiest way is to change is to select the
 #### 3. How to increase W5x00 TX/RX buffer
 
 - For **Ethernet_Generic** library only,  simply use as follows to have large buffer similar to EthernetLarge library
-```
+
+```cpp
 #define ETHERNET_LARGE_BUFFERS
 ```
 
@@ -509,7 +512,8 @@ bool LOAD_DEFAULT_CONFIG_DATA = true;
 ```
 
 2. To use system default to load "blank" when there is no valid Credentials
-```
+
+```cpp
 bool LOAD_DEFAULT_CONFIG_DATA = false;
 ```
 
@@ -586,7 +590,7 @@ Ethernet_Manager ethernet_manager;
 
 - To add custom parameters, just add
 
-```
+```cpp
 #ifndef dynamicParams_h
 #define dynamicParams_h
 
@@ -658,7 +662,7 @@ Ethernet_Manager ethernet_manager;
 
 - If you don't need to add dynamic parameters, use the following in sketch
 
-```
+```cpp
 #define USE_DYNAMIC_PARAMETERS      false
 ```
 
@@ -672,7 +676,7 @@ ethernet_manager.begin();
 
 #### 5. To use custom HTML Style
 
-```
+```cpp
 const char NewCustomsStyle[] /*PROGMEM*/ = "<style>div,input{padding:5px;font-size:1em;}input{width:95%;}body{text-align: center;}\
 button{background-color:blue;color:white;line-height:2.4rem;font-size:1.2rem;width:100%;}fieldset{border-radius:0.3rem;margin:0px;}</style>";
 
@@ -684,13 +688,13 @@ ethernet_manager.setCustomsStyle(NewCustomsStyle);
 #### 6. To use custom Head Elements
 
 
-```
+```cpp
 ethernet_manager.setCustomsHeadElement("<style>html{filter: invert(10%);}</style>");
 ```
 
 #### 7. To use CORS Header
 
-```
+```cpp
 ethernet_manager.setCORSHeader("Your Access-Control-Allow-Origin");
 ```
 
@@ -752,7 +756,7 @@ Connect as follows. To program, use **STM32CubeProgrammer** or Arduino IDE with
 
 
 <p align="center">
-    <img src="https://github.com/khoih-prog/Ethernet_Manager_STM32/blob/main/pics/STM32F407VET6.png">
+    <img src="https://github.com/khoih-prog/Ethernet_Manager_STM32/raw/main/pics/STM32F407VET6.png">
 </p>
 
 ---
@@ -792,25 +796,25 @@ Connect FDTI (USB to Serial) as follows:
 If no valid config data are stored in EEPROM, it will switch to `Configuration Mode`. Connect to access point at the IP address displayed on Terminal or Router's DHCP server as in the following picture:
 
 <p align="center">
-    <img src="https://github.com/khoih-prog/Ethernet_Manager_STM32/blob/main/pics/ConfigPortal.png">
+    <img src="https://github.com/khoih-prog/Ethernet_Manager_STM32/raw/main/pics/ConfigPortal.png">
 </p>
 
 After you connected to, for example, `192.168.2.86`, the Browser will display the following picture:
 
 <p align="center">
-    <img src="https://github.com/khoih-prog/Ethernet_Manager_STM32/blob/main/pics/ConfigPortal_Filled.png">
+    <img src="https://github.com/khoih-prog/Ethernet_Manager_STM32/raw/main/pics/ConfigPortal_Filled.png">
 </p>
 
 Enter your credentials (Blynk Servers/Tokens and Port). If you prefer static IP, input it (for example `192.168.2.222`) in the corresponding field. Otherwise, just leave it `blank` or `nothing` to use auto IP assigned by DHCP server.
 
 <p align="center">
-    <img src="https://github.com/khoih-prog/Ethernet_Manager_STM32/blob/main/pics/ConfigPortal_ThingStream.png">
+    <img src="https://github.com/khoih-prog/Ethernet_Manager_STM32/raw/main/pics/ConfigPortal_ThingStream.png">
 </p>
 
 Then click `Save`. After the  board auto-restarted, you will see if it's connected to your Blynk server successfully as in  the following picture:
 
 <p align="center">
-    <img src="https://github.com/khoih-prog/Ethernet_Manager_STM32/blob/main/pics/Saved.png">
+    <img src="https://github.com/khoih-prog/Ethernet_Manager_STM32/raw/main/pics/Saved.png">
 </p>
 
 This `Ethernet_Manager_STM32.run()` is not a blocking call, so you can use it for critical functions requiring in loop(). 
@@ -863,7 +867,7 @@ This is the terminal output of an STM32F7 Nucleo-144 NUCLEO_F767ZI board with LA
 
 #### 1.1. Normal run
 
-```
+```cpp
 Start Ethernet_STM32 on NUCLEO_F767ZI
 Ethernet Shield type : LAN8742A Ethernet & STM32Ethernet Library
 Ethernet_Manager_STM32 v1.3.2
@@ -939,7 +943,7 @@ This is the terminal output of STM32F7 Nucleo-144 NUCLEO_F767ZI board with W5500
 
 #### 2.1. Normal run with TO_LOAD_DEFAULT_CONFIG_DATA = true
 
-```
+```cpp
 Start Ethernet_STM32 on NUCLEO_F767ZI
 Ethernet Shield type : W5x00 using Ethernet_Generic Library
 Ethernet_Manager_STM32 v1.3.2
@@ -979,7 +983,7 @@ SetFlag write = 0xd0d01234
 #### 2.2. DRD detected
 
 
-```
+```cpp
 Start Ethernet_STM32 on NUCLEO_F767ZI
 Ethernet Shield type : W5x00 using Ethernet_Generic Library
 Ethernet_Manager_STM32 v1.3.2
@@ -1039,7 +1043,7 @@ H
 
 #### 2.3. Restart after Config Portal
 
-```
+```cpp
 Start Ethernet_STM32 on NUCLEO_F767ZI
 Ethernet Shield type : W5x00 using Ethernet_Generic Library
 Ethernet_Manager_STM32 v1.3.2
@@ -1102,7 +1106,7 @@ This is the terminal output of STM32F7 Nucleo-144 NUCLEO_F767ZI board with ENC28
 
 #### 3.1. Normal run without correct ThingStream MQTT Credentials
 
-```
+```cpp
 Start MQTT_ThingStream_Ethernet_STM32 on NUCLEO_F767ZI
 Ethernet Shield type : ENC28J60 using EthernetENC Library
 Ethernet_Manager_STM32 v1.3.2
@@ -1151,7 +1155,7 @@ ClearFlag write = 0xd0d04321
 
 #### 3.2. Got correct ThingStream MQTT Credentials from Config Portal
 
-```
+```cpp
 Start MQTT_ThingStream_Ethernet_STM32 on NUCLEO_F767ZI
 Ethernet Shield type : ENC28J60 using EthernetENC Library
 Ethernet_Manager_STM32 v1.3.2
@@ -1219,7 +1223,7 @@ This is the terminal output of STM32F7 Nucleo-144 NUCLEO_F767ZI board with W5x00
 
 #### 4.1. Normal run 
 
-```
+```cpp
 Start Ethernet_STM32 on NUCLEO_F767ZI
 Ethernet Shield type : W5x00 using Ethernet_Generic Library
 Ethernet_Manager_STM32 v1.3.2
@@ -1282,7 +1286,7 @@ This is the terminal output of STM32F7 Nucleo-144 NUCLEO_F767ZI board with LAN87
 
 #### 5.1. Normal run without correct ThingStream MQTT Credentials
 
-```
+```cpp
 Start MQTT_ThingStream_Ethernet_STM32 on NUCLEO_F767ZI
 Ethernet Shield type : LAN8742A Ethernet & STM32Ethernet Library
 Ethernet_Manager_STM32 v1.3.2
@@ -1317,7 +1321,7 @@ ClearFlag write = 0xd0d04321
 
 #### 5.2. Got correct ThingStream MQTT Credentials from Config Portal
 
-```
+```cpp
 Start MQTT_ThingStream_Ethernet_STM32 on NUCLEO_F767ZI
 Ethernet Shield type : LAN8742A Ethernet & STM32Ethernet Library
 Ethernet_Manager_STM32 v1.3.2
@@ -1380,7 +1384,7 @@ This is the terminal output of STM32F4 BLACK_F407VE with LAN8720 Ethernet using 
 
 #### 6.1. Normal run without correct ThingStream MQTT Credentials
 
-```
+```cpp
 Start MQTT_ThingStream_Ethernet_STM32_LAN8720 on BLACK_F407VE
 Ethernet Shield type : LAN8720 Ethernet & STM32Ethernet Library
 Ethernet_Manager_STM32 v1.3.2
@@ -1421,7 +1425,7 @@ esp32-sniffer/12345678/ble
 
 #### 6.2. Got correct ThingStream MQTT Credentials from Config Portal
 
-```
+```cpp
 Start MQTT_ThingStream_Ethernet_STM32_LAN8720 on BLACK_F407VE
 Ethernet Shield type : LAN8720 Ethernet & STM32Ethernet Library
 Ethernet_Manager_STM32 v1.3.2
@@ -1568,6 +1572,6 @@ If you want to contribute to this project:
 
 ### Copyright
 
-Copyright 2020- Khoi Hoang
+Copyright (c) 2020- Khoi Hoang
 
 

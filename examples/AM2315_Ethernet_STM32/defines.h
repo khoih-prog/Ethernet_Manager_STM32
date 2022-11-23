@@ -15,13 +15,13 @@
 #if ( defined(STM32F0) || defined(STM32F1) || defined(STM32F2) || defined(STM32F3)  ||defined(STM32F4) || defined(STM32F7) || \
        defined(STM32L0) || defined(STM32L1) || defined(STM32L4) || defined(STM32H7)  ||defined(STM32G0) || defined(STM32G4) || \
        defined(STM32WB) || defined(STM32MP1) )
-  #if defined(ETHERNET_USE_STM32)
-    #undef ETHERNET_USE_STM32
-  #endif
-  #define ETHERNET_USE_STM32         true
-  #define USE_DYNAMIC_PARAMETERS      true
+#if defined(ETHERNET_USE_STM32)
+  #undef ETHERNET_USE_STM32
+#endif
+#define ETHERNET_USE_STM32         true
+#define USE_DYNAMIC_PARAMETERS      true
 #else
-  #error This code is designed to run on STM32F/L/H/G/WB/MP1 platform! Please check your Tools->Board setting.  
+#error This code is designed to run on STM32F/L/H/G/WB/MP1 platform! Please check your Tools->Board setting.
 #endif
 
 // To suppress boolean warnings of old libraries
@@ -43,8 +43,8 @@
 #define USE_THIS_SS_PIN       10
 
 // Only one if the following to be true
-#define USE_BUILTIN_ETHERNET  true
-#define USE_ETHERNET_GENERIC  false
+#define USE_BUILTIN_ETHERNET  false
+#define USE_ETHERNET_GENERIC  true
 #define USE_ETHERNET_ENC      false
 #define USE_UIP_ETHERNET      false
 #define USE_CUSTOM_ETHERNET   false
@@ -123,7 +123,7 @@
 #include <Ethernet_Manager_STM32.h>
 
 #ifndef SHIELD_TYPE
-  #define SHIELD_TYPE     "Unknown Ethernet shield/library" 
+  #define SHIELD_TYPE     "Unknown Ethernet shield/library"
 #endif
 
 #if USE_ETHERNET_GENERIC

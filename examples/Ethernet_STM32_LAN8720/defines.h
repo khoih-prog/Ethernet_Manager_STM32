@@ -15,13 +15,13 @@
 #if ( defined(ARDUINO_BLACK_F407VE) || defined(ARDUINO_BLACK_F407VG) || defined(ARDUINO_BLACK_F407ZE) || defined(ARDUINO_BLACK_F407ZG)  || \
       defined(ARDUINO_BLUE_F407VE_Mini) || defined(ARDUINO_DIYMORE_F407VGT) || defined(ARDUINO_FK407M1) || defined(ARDUINO_NUCLEO_F429ZI) || \
       defined(ARDUINO_DISCO_F746NG) || defined(ARDUINO_NUCLEO_F746ZG) || defined(ARDUINO_NUCLEO_F756ZG) || defined(ARDUINO_NUCLEO_H743ZI) )
-  #if defined(ETHERNET_USE_STM32)
-    #undef ETHERNET_USE_STM32
-  #endif
-  #define ETHERNET_USE_STM32         true
-  #define USE_DYNAMIC_PARAMETERS      true
+#if defined(ETHERNET_USE_STM32)
+  #undef ETHERNET_USE_STM32
+#endif
+#define ETHERNET_USE_STM32         true
+#define USE_DYNAMIC_PARAMETERS      true
 #else
-  #error This code is designed to run on some STM32F407XX NUCLEO-F429ZI, STM32F746 and STM32F756 platform! Please check your Tools->Board setting.
+#error This code is designed to run on some STM32F407XX NUCLEO-F429ZI, STM32F746 and STM32F756 platform! Please check your Tools->Board setting.
 #endif
 
 // To suppress boolean warnings of old libraries
@@ -125,7 +125,7 @@
 #include <Ethernet_Manager_STM32.h>
 
 #ifndef SHIELD_TYPE
-  #define SHIELD_TYPE     "LAN8720 Ethernet" 
+  #define SHIELD_TYPE     "LAN8720 Ethernet"
 #endif
 
 #if USE_ETHERNET_GENERIC

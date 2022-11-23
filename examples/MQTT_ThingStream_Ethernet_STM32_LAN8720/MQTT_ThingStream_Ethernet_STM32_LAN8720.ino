@@ -19,12 +19,12 @@
 // GOT FROM ThingsStream!
 
 #if 0
-const char *MQTT_SERVER     = "mqtt.thingstream.io";
-const char *MQTT_USER       = "MQTT_USER";
-const char *MQTT_PASS       = "MQTT_PASS";
-const char *MQTT_CLIENT_ID  = "MQTT_CLIENT_ID";
+  const char *MQTT_SERVER     = "mqtt.thingstream.io";
+  const char *MQTT_USER       = "MQTT_USER";
+  const char *MQTT_PASS       = "MQTT_PASS";
+  const char *MQTT_CLIENT_ID  = "MQTT_CLIENT_ID";
 
-const int   MQTT_PORT       = 1883; //if you use SSL //1883 no SSL
+  const int   MQTT_PORT       = 1883; //if you use SSL //1883 no SSL
 #endif
 
 const char *MQTT_PREFIX_TOPIC   = "esp32-sniffer/";
@@ -62,24 +62,24 @@ PubSubClient* client = NULL;
 /*
    Called whenever a payload is received from a subscribed MQTT topic
 */
-void mqtt_receive_callback(char* topic, byte* payload, unsigned int length) 
+void mqtt_receive_callback(char* topic, byte* payload, unsigned int length)
 {
   Serial.print(F("\nMQTT Message receive ["));
   Serial.print(topic);
   Serial.print(F("] "));
-  
-  for (unsigned int i = 0; i < length; i++) 
+
+  for (unsigned int i = 0; i < length; i++)
   {
     Serial.print((char)payload[i]);
   }
-  
+
   Serial.println();
 }
 
-void reconnect() 
-{     
+void reconnect()
+{
   // Loop until we're reconnected
-  while (!client->connected()) 
+  while (!client->connected())
   {
     Serial.print(F("Attempting MQTT connection to "));
     Serial.println(MQTT_SERVER);
@@ -88,28 +88,28 @@ void reconnect()
 
     int connect_status = client->connect(MQTT_CLIENT_ID, MQTT_USER, MQTT_PASS, topic.c_str(), 2, false, "");
 
-    if (connect_status)                                
+    if (connect_status)
     {
       Serial.println(F("...connected"));
 
       client->publish(topic.c_str(), pubData);
 
       Serial.println(F("Published connection message successfully!"));
-     
+
       Serial.print(F("Subcribed to: "));
       Serial.println(subTopic);
-      
+
       // ... and resubscribe
       client->subscribe(subTopic.c_str());
       // for loopback testing
       client->subscribe(topic.c_str());
-    } 
-    else 
+    }
+    else
     {
       Serial.print(F("failed, rc="));
       Serial.print(client->state());
       Serial.println(F(" try again in 5 seconds"));
-      
+
       // Wait 5 seconds before retrying
       delay(5000);
     }
@@ -122,14 +122,15 @@ void heartBeatPrint()
 {
   static int num        = 1;
   static int linkStatus = 0;
-  
+
   localEthernetIP = Ethernet.localIP();
-  
+
   // The linkStatus() is not working with W5100. Just using IP != 0.0.0.0
   // Better to use ping for W5100
   linkStatus = (int) Ethernet.linkStatus();
-  ET_LOGINFO3(F("localEthernetIP = "), localEthernetIP, F(", linkStatus = "), (linkStatus == LinkON) ? F("LinkON") : F("LinkOFF") );
-  
+  ET_LOGINFO3(F("localEthernetIP = "), localEthernetIP, F(", linkStatus = "),
+              (linkStatus == LinkON) ? F("LinkON") : F("LinkOFF") );
+
   if ( (uint32_t) localEthernetIP != 0 )
   {
     Serial.print(F("H"));
@@ -150,8 +151,8 @@ void heartBeatPrint()
 
 void check_status()
 {
-  #define STATUS_CHECK_INTERVAL     10000L
-  
+#define STATUS_CHECK_INTERVAL     10000L
+
   static unsigned long checkstatus_timeout = STATUS_CHECK_INTERVAL;
 
   // Send status report every STATUS_REPORT_INTERVAL (60) seconds: we don't need to send updates frequently if there is no status change.
@@ -163,8 +164,9 @@ void check_status()
 }
 
 #if USING_CUSTOMS_STYLE
-const char NewCustomsStyle[] /*PROGMEM*/ = "<style>div,input{padding:5px;font-size:1em;}input{width:95%;}body{text-align: center;}\
-button{background-color:blue;color:white;line-height:2.4rem;font-size:1.2rem;width:100%;}fieldset{border-radius:0.3rem;margin:0px;}</style>";
+  const char NewCustomsStyle[] /*PROGMEM*/ =
+  "<style>div,input{padding:5px;font-size:1em;}input{width:95%;}body{text-align: center;}\
+  button{background-color:blue;color:white;line-height:2.4rem;font-size:1.2rem;width:100%;}fieldset{border-radius:0.3rem;margin:0px;}</style>";
 #endif
 
 void setup()
@@ -173,13 +175,15 @@ void setup()
   Serial.begin(115200);
   delay(2000);
 
-  Serial.print(F("\nStart MQTT_ThingStream_Ethernet_STM32_LAN8720 on ")); Serial.println(BOARD_NAME);
-  Serial.print(F("Ethernet Shield type : ")); Serial.println(SHIELD_TYPE);
+  Serial.print(F("\nStart MQTT_ThingStream_Ethernet_STM32_LAN8720 on "));
+  Serial.println(BOARD_NAME);
+  Serial.print(F("Ethernet Shield type : "));
+  Serial.println(SHIELD_TYPE);
   Serial.println(ETHERNET_MANAGER_STM32_VERSION);
   Serial.println(DOUBLERESETDETECTOR_GENERIC_VERSION);
 
   //////////////////////////////////////////////
-  
+
 #if USING_CUSTOMS_STYLE
   ethernet_manager.setCustomsStyle(NewCustomsStyle);
 #endif
@@ -188,7 +192,7 @@ void setup()
   ethernet_manager.setCustomsHeadElement("<style>html{filter: invert(10%);}</style>");
 #endif
 
-#if USING_CORS_FEATURE  
+#if USING_CORS_FEATURE
   ethernet_manager.setCORSHeader("Your Access-Control-Allow-Origin");
 #endif
 
@@ -207,7 +211,7 @@ void setup()
   {
     Serial.println(F("Ethernet not Connected! Please check."));
   }
- 
+
   Serial.println(F("***************************************"));
   Serial.println(topic);
   Serial.println(F("***************************************"));
@@ -256,7 +260,7 @@ void loop()
   static bool           inConfigMode = true;
   static unsigned long  currentMillis;
 
-  
+
   inConfigMode = ethernet_manager.run();
 
   if (!inConfigMode)
@@ -264,42 +268,42 @@ void loop()
 #if (USE_DYNAMIC_PARAMETERS)
     displayCredentialsOnce();
 #endif
-    
+
     if (!client)
     {
-       client = new PubSubClient(MQTT_SERVER, atoi(MQTT_PORT), mqtt_receive_callback, ethClient);
+      client = new PubSubClient(MQTT_SERVER, atoi(MQTT_PORT), mqtt_receive_callback, ethClient);
 
       // Note - the default maximum packet size is 256 bytes. If the
       // combined length of clientId, username and password exceed this use the
       // following to increase the buffer size:
       //client->setBufferSize(256);
     }
-    
-    if (!client->connected()) 
+
+    if (!client->connected())
     {
       reconnect();
     }
-  
+
     // Sending Data
     currentMillis = millis();
-    
+
     if (currentMillis - lastMsg > MQTT_PUBLISH_INTERVAL_MS)
     {
       lastMsg = currentMillis;
-  
+
       if (!client->publish(topic.c_str(), pubData))
       {
         Serial.println(F("Message failed to send."));
       }
-  
+
       Serial.print(F("\nMQTT Message Send : "));
       Serial.print(topic);
       Serial.print(F(" => "));
       Serial.println(data);
     }
-    
+
     client->loop();
-    
+
     check_status();
   }
 }

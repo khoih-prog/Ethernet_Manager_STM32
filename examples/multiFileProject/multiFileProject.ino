@@ -19,28 +19,31 @@
 // To be included only in main(), .ino with setup() to avoid `Multiple Definitions` Linker Error
 #include <Ethernet_Manager_STM32.h>         // https://github.com/khoih-prog/Ethernet_Manager_STM32
 
-void setup() 
+void setup()
 {
   Serial.begin(115200);
+
   while (!Serial);
 
   delay(500);
-  
+
   Serial.println("\nStart multiFileProject");
   Serial.println(ETHERNET_MANAGER_STM32_VERSION);
 
 #if defined(ETHERNET_MANAGER_STM32_VERSION_MIN)
+
   if (ETHERNET_MANAGER_STM32_VERSION_INT < ETHERNET_MANAGER_STM32_VERSION_MIN)
   {
     Serial.print("Warning. Must use this example on Version equal or later than : ");
     Serial.println(ETHERNET_MANAGER_STM32_VERSION_MIN_TARGET);
   }
+
 #endif
 
   Serial.print("You're OK now");
 }
 
-void loop() 
+void loop()
 {
   // put your main code here, to run repeatedly:
 }

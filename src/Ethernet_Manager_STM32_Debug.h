@@ -7,7 +7,7 @@
 
   Built by Khoi Hoang https://github.com/khoih-prog/Ethernet_Manager_STM32
   Licensed under MIT license
-    
+
   Version: 1.3.2
 
   Version  Modified By   Date      Comments

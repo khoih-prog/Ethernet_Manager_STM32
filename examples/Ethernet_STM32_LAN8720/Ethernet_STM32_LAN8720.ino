@@ -21,14 +21,15 @@ void heartBeatPrint()
 {
   static int num        = 1;
   static int linkStatus = 0;
-  
+
   localEthernetIP = Ethernet.localIP();
-  
+
   // The linkStatus() is not working with W5100. Just using IP != 0.0.0.0
   // Better to use ping for W5100
   linkStatus = (int) Ethernet.linkStatus();
-  ETM_LOGINFO3(F("localEthernetIP = "), localEthernetIP, F(", linkStatus = "), (linkStatus == LinkON) ? F("LinkON") : F("LinkOFF") );
-  
+  ETM_LOGINFO3(F("localEthernetIP = "), localEthernetIP, F(", linkStatus = "),
+               (linkStatus == LinkON) ? F("LinkON") : F("LinkOFF") );
+
   if ( (uint32_t) localEthernetIP != 0 )
   {
     Serial.print(F("H"));
@@ -49,8 +50,8 @@ void heartBeatPrint()
 
 void check_status()
 {
-  #define STATUS_CHECK_INTERVAL     10000L
-  
+#define STATUS_CHECK_INTERVAL     10000L
+
   static unsigned long checkstatus_timeout = STATUS_CHECK_INTERVAL;
 
   // Send status report every STATUS_REPORT_INTERVAL (60) seconds: we don't need to send updates frequently if there is no status change.
@@ -62,8 +63,9 @@ void check_status()
 }
 
 #if USING_CUSTOMS_STYLE
-const char NewCustomsStyle[] /*PROGMEM*/ = "<style>div,input{padding:5px;font-size:1em;}input{width:95%;}body{text-align: center;}\
-button{background-color:blue;color:white;line-height:2.4rem;font-size:1.2rem;width:100%;}fieldset{border-radius:0.3rem;margin:0px;}</style>";
+  const char NewCustomsStyle[] /*PROGMEM*/ =
+  "<style>div,input{padding:5px;font-size:1em;}input{width:95%;}body{text-align: center;}\
+  button{background-color:blue;color:white;line-height:2.4rem;font-size:1.2rem;width:100%;}fieldset{border-radius:0.3rem;margin:0px;}</style>";
 #endif
 
 void setup()
@@ -72,13 +74,15 @@ void setup()
   Serial.begin(115200);
   delay(2000);
 
-  Serial.print(F("\nStart Ethernet_STM32_LAN8720 on ")); Serial.println(BOARD_NAME);
-  Serial.print(F("Ethernet Shield type : ")); Serial.println(SHIELD_TYPE);
+  Serial.print(F("\nStart Ethernet_STM32_LAN8720 on "));
+  Serial.println(BOARD_NAME);
+  Serial.print(F("Ethernet Shield type : "));
+  Serial.println(SHIELD_TYPE);
   Serial.println(ETHERNET_MANAGER_STM32_VERSION);
   Serial.println(DOUBLERESETDETECTOR_GENERIC_VERSION);
 
   //////////////////////////////////////////////
-  
+
 #if USING_CUSTOMS_STYLE
   ethernet_manager.setCustomsStyle(NewCustomsStyle);
 #endif
@@ -87,7 +91,7 @@ void setup()
   ethernet_manager.setCustomsHeadElement("<style>html{filter: invert(10%);}</style>");
 #endif
 
-#if USING_CORS_FEATURE  
+#if USING_CORS_FEATURE
   ethernet_manager.setCORSHeader("Your Access-Control-Allow-Origin");
 #endif
 
@@ -147,10 +151,10 @@ void displayCredentialsOnce()
 void loop()
 {
   ethernet_manager.run();
-  
+
   check_status();
 
 #if (USE_DYNAMIC_PARAMETERS)
   displayCredentialsOnce();
-#endif  
+#endif
 }
